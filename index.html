@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Rover - AI-Powered Recipe Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .input-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 15px;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .recipe-output {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .recipe-output h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        #recipeContent {
+            line-height: 1.8;
+            color: #333;
+        }
+
+        #recipeContent p {
+            margin-bottom: 15px;
+        }
+
+        #recipeContent strong {
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #c33;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .tagline {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍳 Recipe Rover</h1>
+            <p class="tagline">Turn Your Ingredients Into Delicious Recipes</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <h2>What's in Your Kitchen?</h2>
+                <textarea 
+                    id="ingredients" 
+                    placeholder="Enter your ingredients (e.g., chicken, tomatoes, garlic, pasta, olive oil)"
+                    rows="5"
+                ></textarea>
+                <button id="generateBtn" onclick="generateRecipe()">Generate Recipe ✨</button>
+            </div>
+
+            <div id="loadingIndicator" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Cooking up something delicious...</p>
+            </div>
+
+            <div id="recipeOutput" class="recipe-output hidden">
+                <h2>Your Recipe</h2>
+                <div id="recipeContent"></div>
+                <button onclick="clearRecipe()">Generate Another Recipe</button>
+            </div>
+
+            <div id="errorMessage" class="error hidden"></div>
+        </main>
+
+        <footer>
+            <p>Powered by Google Gemini AI | Chomptron.com</p>
+        </footer>
+    </div>
+
+    <script>
+        async function generateRecipe() {
+            const ingredients = document.getElementById('ingredients').value.trim();
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const recipeOutput = document.getElementById('recipeOutput');
+            const errorMessage = document.getElementById('errorMessage');
+            const generateBtn = document.getElementById('generateBtn');
+
+            errorMessage.classList.add('hidden');
+            recipeOutput.classList.add('hidden');
+
+            if (!ingredients) {
+                showError('Please enter some ingredients!');
+                return;
+            }
+
+            loadingIndicator.classList.remove('hidden');
+            generateBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/generate-recipe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ingredients: ingredients })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayRecipe(data.recipe);
+                } else {
+                    showError(data.error || 'Failed to generate recipe');
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            } finally {
+                loadingIndicator.classList.add('hidden');
+                generateBtn.disabled = false;
+            }
+        }
+
+        function displayRecipe(recipe) {
+            const recipeContent = document.getElementById('recipeContent');
+            const recipeOutput = document.getElementById('recipeOutput');
+            
+            const formattedRecipe = recipe
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+            
+            recipeContent.innerHTML = '<p>' + formattedRecipe + '</p>';
+            recipeOutput.classList.remove('hidden');
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+
+        function clearRecipe() {
+            document.getElementById('recipeOutput').classList.add('hidden');
+            document.getElementById('ingredients').value = '';
+            document.getElementById('ingredients').focus();
+        }
+
+        document.getElementById('ingredients').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                generateRecipe();
+            }
+        });
+    </script>
+</body>
+</html>
