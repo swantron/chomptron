@@ -42,5 +42,5 @@ Make the recipe practical and delicious!`;
 });
 
 app.listen(port, () => {
-  console.log(`Recipe Rover running on port ${port}`);
+  console.log(`Chomptron running on port ${port}`);
 });
