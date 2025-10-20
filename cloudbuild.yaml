@@ -2,32 +2,12 @@
 steps:
   # 1. Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:latest', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:$COMMIT_SHA', '.']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:latest', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:$SHORT_SHA', '.']
 
   # 2. Push the image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', '--all-tags', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron']
 
-  # 3. Deploy the new image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
-    args:
-      - 'run'
-      - 'deploy'
-      - 'chomptron'
-      - '--image'
-      - 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:latest'
-      - '--region'
-      - 'us-central1'
-      - '--platform'
-      - 'managed'
-      - '--allow-unauthenticated'
-      - '--service-account'
-      - '$PROJECT_NUMBER-compute@developer.gserviceaccount.com'
-      - '--update-secrets'
-      - 'GEMINI_API_KEY=gemini-api-key:latest'
-    timeout: '600s'
-
-# Substitution variables (set these in your Cloud Build trigger)
+# Just build and push - deploy manually or via GitHub Actions
 options:
   logging: CLOUD_LOGGING_ONLY
