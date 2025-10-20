@@ -40,7 +40,7 @@ assert(fs.existsSync('./cloudbuild.yaml'), 'cloudbuild.yaml exists');
 // Test 7: Check cloudbuild.yaml has required steps
 const cloudbuild = fs.readFileSync('./cloudbuild.yaml', 'utf8');
 assert(cloudbuild.includes('docker'), 'cloudbuild.yaml has docker build step');
-assert(cloudbuild.includes('run'), 'cloudbuild.yaml has Cloud Run deploy step');
+assert(cloudbuild.includes('push'), 'cloudbuild.yaml has docker push step');
 
 // Test 8: Validate Node.js version
 const nodeVersion = parseInt(process.version.slice(1).split('.')[0]);
