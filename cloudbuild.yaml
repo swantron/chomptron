@@ -2,11 +2,11 @@
 steps:
   # 1. Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:$COMMIT_SHA', '.']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:latest', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:$COMMIT_SHA', '.']
 
   # 2. Push the image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:$COMMIT_SHA']
+    args: ['push', '--all-tags', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron']
 
   # 3. Deploy the new image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -16,7 +16,7 @@ steps:
       - 'deploy'
       - 'chomptron'
       - '--image'
-      - 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:$COMMIT_SHA'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:latest'
       - '--region'
       - 'us-central1'
       - '--platform'
