@@ -24,6 +24,8 @@ steps:
       - '--allow-unauthenticated'
       - '--update-secrets'
       - 'GEMINI_API_KEY=gemini-api-key:latest'
+      - '--quiet'
+    timeout: '600s'
 
 # Substitution variables (set these in your Cloud Build trigger)
 options:
