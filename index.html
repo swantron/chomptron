@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chomptron - AI-Powered Recipe Generator</title>
     <style>
+        :root {
+            --primary-bg: #282c34;
+            --secondary-bg: #f0f0f0;
+            --primary-text: #ffffff;
+            --secondary-text: #333333;
+            --accent-color: #f89859;
+            --error-color: #ff4444;
+            --success-color: #4caf50;
+            --border-radius: 10px;
+            --transition-speed: 0.3s;
+            --max-width: 1200px;
+            --container-padding: 20px;
+            --border-color: #dfe6e9;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,19 +28,19 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-bg);
             min-height: 100vh;
-            padding: 20px;
-            color: #333;
+            padding: var(--container-padding);
+            color: var(--secondary-text);
         }
 
         .container {
-            max-width: 800px;
+            max-width: var(--max-width);
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius);
             padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         header {
@@ -35,17 +50,18 @@
 
         h1 {
             font-size: 3em;
-            color: #667eea;
+            color: var(--accent-color);
             margin-bottom: 10px;
         }
 
         .tagline {
             font-size: 1.2em;
-            color: #666;
+            color: var(--secondary-text);
+            opacity: 0.8;
         }
 
         .input-section h2 {
-            color: #333;
+            color: var(--secondary-text);
             margin-bottom: 15px;
             font-size: 1.5em;
         }
@@ -53,36 +69,37 @@
         textarea {
             width: 100%;
             padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
             font-size: 1em;
             font-family: inherit;
             resize: vertical;
-            transition: border-color 0.3s;
+            transition: border-color var(--transition-speed);
+            background: white;
         }
 
         textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--accent-color);
         }
 
         button {
             width: 100%;
             padding: 15px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: var(--accent-color);
+            color: var(--primary-text);
             border: none;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
             margin-top: 15px;
         }
 
         button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(248, 152, 89, 0.4);
         }
 
         button:disabled {
@@ -98,8 +115,8 @@
         .spinner {
             width: 50px;
             height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #667eea;
+            border: 5px solid var(--border-color);
+            border-top: 5px solid var(--accent-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
@@ -111,21 +128,22 @@
         }
 
         .recipe-output {
-            background: #f8f9fa;
+            background: white;
             padding: 30px;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             margin-top: 30px;
+            border: 2px solid var(--border-color);
         }
 
         .recipe-output h2 {
-            color: #667eea;
+            color: var(--accent-color);
             margin-bottom: 20px;
             font-size: 2em;
         }
 
         #recipeContent {
             line-height: 1.8;
-            color: #333;
+            color: var(--secondary-text);
         }
 
         #recipeContent p {
@@ -133,17 +151,17 @@
         }
 
         #recipeContent strong {
-            color: #667eea;
+            color: var(--accent-color);
             font-size: 1.1em;
         }
 
         .error {
-            background: #fee;
-            color: #c33;
+            background: #ffebee;
+            color: var(--error-color);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             margin-top: 20px;
-            border-left: 4px solid #c33;
+            border-left: 4px solid var(--error-color);
         }
 
         .hidden {
@@ -154,8 +172,9 @@
             text-align: center;
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 2px solid #e0e0e0;
-            color: #666;
+            border-top: 2px solid var(--border-color);
+            color: var(--secondary-text);
+            opacity: 0.7;
         }
 
         @media (max-width: 600px) {
