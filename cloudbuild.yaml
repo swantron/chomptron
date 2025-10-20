@@ -22,8 +22,8 @@ steps:
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
-      - '--set-env-vars'
-      - 'GEMINI_API_KEY=${_GEMINI_API_KEY}'
+      - '--update-secrets'
+      - 'GEMINI_API_KEY=gemini-api-key:latest'
 
 # Substitution variables (set these in your Cloud Build trigger)
 options:
