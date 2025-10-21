@@ -92,17 +92,7 @@ gcloud run logs tail chomptron --region us-central1
 
 ## SEO Features
 
-Chomptron includes comprehensive SEO features similar to tronswan.com:
-
-- **Meta Tags:** Title, description, keywords, author
-- **Open Graph:** Facebook and social media sharing optimization
-- **Twitter Cards:** Enhanced Twitter sharing with images
-- **Structured Data:** JSON-LD schema.org markup for search engines
-- **PWA Support:** Web app manifest for mobile installation
-- **Robots.txt:** Search engine crawler instructions
-- **Sitemap.xml:** URL structure for search engine indexing
-- **Canonical URLs:** Prevent duplicate content issues
-- **Performance:** Preconnect hints and DNS prefetching
+Optimized for search engines and social sharing with meta tags, Open Graph, Twitter Cards, structured data (JSON-LD), sitemap, robots.txt, and PWA support.
 
 ## License
 
