@@ -11,6 +11,34 @@ const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 app.use(express.json());
 app.use(express.static('.'));
 
+// Serve sitemap.xml with correct content type
+app.get('/sitemap.xml', (req, res) => {
+  res.set('Content-Type', 'application/xml');
+  res.sendFile(__dirname + '/sitemap.xml');
+});
+
+// Serve robots.txt with correct content type
+app.get('/robots.txt', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.sendFile(__dirname + '/robots.txt');
+});
+
+// Health check endpoint for Cloud Run
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'healthy', service: 'chomptron' });
+});
+
+// Readiness check - verifies AI service is configured
+app.get('/ready', (req, res) => {
+  if (!process.env.GEMINI_API_KEY) {
+    return res.status(503).json({ 
+      status: 'not ready', 
+      error: 'GEMINI_API_KEY not configured' 
+    });
+  }
+  res.status(200).json({ status: 'ready', service: 'chomptron' });
+});
+
 app.post('/api/generate-recipe', async (req, res) => {
   try {
     const { ingredients } = req.body;
@@ -41,6 +69,8 @@ Make the recipe practical and delicious!`;
   }
 });
 
-app.listen(port, () => {
-  console.log(`Chomptron running on port ${port}`);
+const server = app.listen(port, () => {
+  console.log(`Chomptron AI Recipe Generator running on port ${port}`);
 });
+
+module.exports = server;

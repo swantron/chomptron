@@ -1,0 +1,28 @@
+{
+  "short_name": "Chomptron",
+  "name": "Chomptron - AI Recipe Generator",
+  "description": "Turn your ingredients into delicious recipes with AI",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "chomptron_192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "chomptron_512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "scope": "/",
+  "orientation": "portrait-primary"
+}
