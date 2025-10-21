@@ -37,20 +37,23 @@ Tests validate:
 - **`GET /ready`** - Readiness check, verifies AI configuration
 - **`POST /api/generate-recipe`** - Main recipe generation endpoint
 
-## Deployment
-
-See [TODO.md](TODO.md) for complete deployment checklist.
-
 ## Architecture
 
+Chomptron is built as a **serverless application** on Google Cloud Run for cost efficiency and automatic scaling.
+
+**Tech Stack:**
 - **Backend:** Node.js 20 + Express  
-- **AI:** Google Gemini 2.0 Flash (via `@google/generative-ai`)
+- **AI:** Google Gemini 2.0 Flash
 - **Frontend:** Vanilla HTML/CSS/JavaScript
-- **Container:** Docker  
-- **Platform:** Cloud Run (fully managed, serverless)
-- **CI/CD:** Cloud Build + GitHub Actions  
-- **Registry:** Artifact Registry (us-central1)
-- **Domain:** chomptron.com (AI recipe app)
+- **Platform:** Google Cloud Run (serverless)
+- **CI/CD:** Cloud Build
+- **Domain:** chomptron.com
+
+**Why Serverless?**
+- **Scales to zero** when idle → $0 cost (vs. $5-50/month traditional hosting)
+- **Auto-scales** from 0 to 1000+ instances based on traffic
+- **Zero maintenance** - no servers to manage, patch, or configure
+- **Perfect for AI workloads** - handles burst traffic and CPU-intensive recipe generation efficiently
 
 ## Monitoring
 
