@@ -282,6 +282,7 @@
             <div id="recipeOutput" class="recipe-output hidden">
                 <h2>Your Recipe</h2>
                 <div id="recipeContent"></div>
+                <button onclick="copyRecipe()">Copy Recipe 📋</button>
                 <button onclick="clearRecipe()">Generate Another Recipe</button>
             </div>
 
@@ -359,6 +360,23 @@
             document.getElementById('recipeOutput').classList.add('hidden');
             document.getElementById('ingredients').value = '';
             document.getElementById('ingredients').focus();
+        }
+
+        async function copyRecipe() {
+            const recipeContent = document.getElementById('recipeContent');
+            const textContent = recipeContent.innerText;
+            
+            try {
+                await navigator.clipboard.writeText(textContent);
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied! ✓';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            } catch (error) {
+                showError('Failed to copy recipe to clipboard');
+            }
         }
 
         document.getElementById('ingredients').addEventListener('keydown', function(e) {
