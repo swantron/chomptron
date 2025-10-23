@@ -282,7 +282,7 @@
             <div id="recipeOutput" class="recipe-output hidden">
                 <h2>Your Recipe</h2>
                 <div id="recipeContent"></div>
-                <button onclick="copyRecipe()">Copy Recipe 📋</button>
+                <button onclick="copyRecipe(event)">Copy Recipe 📋</button>
                 <button onclick="clearRecipe()">Generate Another Recipe</button>
             </div>
 
@@ -362,19 +362,54 @@
             document.getElementById('ingredients').focus();
         }
 
-        async function copyRecipe() {
+        function copyRecipe(event) {
             const recipeContent = document.getElementById('recipeContent');
             const textContent = recipeContent.innerText;
+            const btn = event.target;
+            const originalText = btn.textContent;
             
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textContent).then(() => {
+                    btn.textContent = 'Copied! ✓';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                }).catch((err) => {
+                    console.error('Clipboard error:', err);
+                    fallbackCopy(textContent, btn, originalText);
+                });
+            } else {
+                fallbackCopy(textContent, btn, originalText);
+            }
+        }
+
+        function fallbackCopy(text, btn, originalText) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.top = '0';
+            textarea.style.left = '0';
+            textarea.style.opacity = '0';
+            textarea.setAttribute('readonly', '');
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            
+            let success = false;
             try {
-                await navigator.clipboard.writeText(textContent);
-                const btn = event.target;
-                const originalText = btn.textContent;
+                success = document.execCommand('copy');
+            } catch (error) {
+                console.error('Fallback copy error:', error);
+            }
+            
+            document.body.removeChild(textarea);
+            
+            if (success) {
                 btn.textContent = 'Copied! ✓';
                 setTimeout(() => {
                     btn.textContent = originalText;
                 }, 2000);
-            } catch (error) {
+            } else {
                 showError('Failed to copy recipe to clipboard');
             }
         }
