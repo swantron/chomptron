@@ -8,3 +8,5 @@ test.js
 app.yaml
 key.json
 .github
+eslint.config.js
+.prettierignore
