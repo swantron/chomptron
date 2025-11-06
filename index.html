@@ -1,425 +1,470 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />
-    
+
     <!-- Primary Meta Tags -->
     <title>Chomptron - AI-Powered Recipe Generator</title>
-    <meta name="title" content="Chomptron - AI-Powered Recipe Generator">
-    <meta name="description" content="Turn your ingredients into delicious recipes with AI. Chomptron uses Google Gemini AI to create personalized recipes from whatever you have in your kitchen. Built by Joseph Swanson.">
-    <meta name="keywords" content="AI recipe generator, recipe app, cooking assistant, ingredient-based recipes, Gemini AI, Google Cloud, Joseph Swanson, chomptron, AI cooking, recipe maker, meal planner">
-    <meta name="author" content="Joseph Swanson">
-    <meta name="robots" content="index, follow">
-    <meta name="googlebot" content="index, follow">
-    <meta http-equiv="Content-Language" content="en-US">
-    
+    <meta name="title" content="Chomptron - AI-Powered Recipe Generator" />
+    <meta
+      name="description"
+      content="Turn your ingredients into delicious recipes with AI. Chomptron uses Google Gemini AI to create personalized recipes from whatever you have in your kitchen. Built by Joseph Swanson."
+    />
+    <meta
+      name="keywords"
+      content="AI recipe generator, recipe app, cooking assistant, ingredient-based recipes, Gemini AI, Google Cloud, Joseph Swanson, chomptron, AI cooking, recipe maker, meal planner"
+    />
+    <meta name="author" content="Joseph Swanson" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <meta http-equiv="Content-Language" content="en-US" />
+
     <!-- Canonical URL -->
     <link rel="canonical" href="https://chomptron.com" />
-    
+
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://chomptron.com">
-    <meta property="og:title" content="Chomptron - AI-Powered Recipe Generator">
-    <meta property="og:description" content="Turn your ingredients into delicious recipes with AI. Chomptron uses Google Gemini AI to create personalized recipes from whatever you have in your kitchen.">
-    <meta property="og:image" content="https://chomptron.com/chomptron_512x512.png">
-    <meta property="og:site_name" content="Chomptron">
-    
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://chomptron.com" />
+    <meta
+      property="og:title"
+      content="Chomptron - AI-Powered Recipe Generator"
+    />
+    <meta
+      property="og:description"
+      content="Turn your ingredients into delicious recipes with AI. Chomptron uses Google Gemini AI to create personalized recipes from whatever you have in your kitchen."
+    />
+    <meta
+      property="og:image"
+      content="https://chomptron.com/chomptron_512x512.png"
+    />
+    <meta property="og:site_name" content="Chomptron" />
+
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://chomptron.com">
-    <meta property="twitter:title" content="Chomptron - AI-Powered Recipe Generator">
-    <meta property="twitter:description" content="Turn your ingredients into delicious recipes with AI. Chomptron uses Google Gemini AI to create personalized recipes from whatever you have in your kitchen.">
-    <meta property="twitter:image" content="https://chomptron.com/chomptron_512x512.png">
-    
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://chomptron.com" />
+    <meta
+      property="twitter:title"
+      content="Chomptron - AI-Powered Recipe Generator"
+    />
+    <meta
+      property="twitter:description"
+      content="Turn your ingredients into delicious recipes with AI. Chomptron uses Google Gemini AI to create personalized recipes from whatever you have in your kitchen."
+    />
+    <meta
+      property="twitter:image"
+      content="https://chomptron.com/chomptron_512x512.png"
+    />
+
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="//chomptron.com" />
-    
+
     <!-- PWA Support -->
     <link rel="apple-touch-icon" href="/chomptron_192x192.png" />
     <link rel="manifest" href="/manifest.json" />
-    
+
     <!-- Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Chomptron",
-      "url": "https://chomptron.com",
-      "description": "AI-Powered Recipe Generator using Google Gemini AI",
-      "applicationCategory": "LifestyleApplication",
-      "operatingSystem": "Any",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "author": {
-        "@type": "Person",
-        "name": "Joseph Swanson"
-      },
-      "creator": {
-        "@type": "Person",
-        "name": "Joseph Swanson"
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Chomptron",
+        "url": "https://chomptron.com",
+        "description": "AI-Powered Recipe Generator using Google Gemini AI",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Joseph Swanson"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "Joseph Swanson"
+        }
       }
-    }
     </script>
     <style>
-        :root {
-            --primary-bg: #282c34;
-            --secondary-bg: #f0f0f0;
-            --primary-text: #ffffff;
-            --secondary-text: #333333;
-            --accent-color: #f89859;
-            --error-color: #ff4444;
-            --success-color: #4caf50;
-            --border-radius: 10px;
-            --transition-speed: 0.3s;
-            --max-width: 1200px;
-            --container-padding: 20px;
-            --border-color: #dfe6e9;
-        }
+      :root {
+        --primary-bg: #282c34;
+        --secondary-bg: #f0f0f0;
+        --primary-text: #ffffff;
+        --secondary-text: #333333;
+        --accent-color: #f89859;
+        --error-color: #ff4444;
+        --success-color: #4caf50;
+        --border-radius: 10px;
+        --transition-speed: 0.3s;
+        --max-width: 1200px;
+        --container-padding: 20px;
+        --border-color: #dfe6e9;
+      }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--primary-bg);
-            min-height: 100vh;
-            padding: var(--container-padding);
-            color: var(--secondary-text);
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--primary-bg);
+        min-height: 100vh;
+        padding: var(--container-padding);
+        color: var(--secondary-text);
+      }
 
+      .container {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        background: var(--secondary-bg);
+        border-radius: var(--border-radius);
+        padding: 40px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      h1 {
+        font-size: 3em;
+        color: var(--accent-color);
+        margin-bottom: 10px;
+      }
+
+      .tagline {
+        font-size: 1.2em;
+        color: var(--secondary-text);
+        opacity: 0.8;
+      }
+
+      .input-section h2 {
+        color: var(--secondary-text);
+        margin-bottom: 15px;
+        font-size: 1.5em;
+      }
+
+      textarea {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius);
+        font-size: 1em;
+        font-family: inherit;
+        resize: vertical;
+        transition: border-color var(--transition-speed);
+        background: white;
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: var(--accent-color);
+      }
+
+      button {
+        width: 100%;
+        padding: 15px 30px;
+        background: var(--accent-color);
+        color: var(--primary-text);
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition:
+          transform var(--transition-speed),
+          box-shadow var(--transition-speed);
+        margin-top: 15px;
+      }
+
+      button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(248, 152, 89, 0.4);
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid var(--border-color);
+        border-top: 5px solid var(--accent-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .recipe-output {
+        background: white;
+        padding: 30px;
+        border-radius: var(--border-radius);
+        margin-top: 30px;
+        border: 2px solid var(--border-color);
+      }
+
+      .recipe-output h2 {
+        color: var(--accent-color);
+        margin-bottom: 20px;
+        font-size: 2em;
+      }
+
+      #recipeContent {
+        line-height: 1.8;
+        color: var(--secondary-text);
+      }
+
+      #recipeContent p {
+        margin-bottom: 15px;
+      }
+
+      #recipeContent strong {
+        color: var(--accent-color);
+        font-size: 1.1em;
+      }
+
+      .error {
+        background: #ffebee;
+        color: var(--error-color);
+        padding: 15px;
+        border-radius: var(--border-radius);
+        margin-top: 20px;
+        border-left: 4px solid var(--error-color);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 2px solid var(--border-color);
+        color: var(--secondary-text);
+        opacity: 0.7;
+      }
+
+      @media (max-width: 600px) {
         .container {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            background: var(--secondary-bg);
-            border-radius: var(--border-radius);
-            padding: 40px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
+          padding: 20px;
         }
 
         h1 {
-            font-size: 3em;
-            color: var(--accent-color);
-            margin-bottom: 10px;
+          font-size: 2em;
         }
 
         .tagline {
-            font-size: 1.2em;
-            color: var(--secondary-text);
-            opacity: 0.8;
+          font-size: 1em;
         }
-
-        .input-section h2 {
-            color: var(--secondary-text);
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius);
-            font-size: 1em;
-            font-family: inherit;
-            resize: vertical;
-            transition: border-color var(--transition-speed);
-            background: white;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
-        button {
-            width: 100%;
-            padding: 15px 30px;
-            background: var(--accent-color);
-            color: var(--primary-text);
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-            margin-top: 15px;
-        }
-
-        button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(248, 152, 89, 0.4);
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--border-color);
-            border-top: 5px solid var(--accent-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .recipe-output {
-            background: white;
-            padding: 30px;
-            border-radius: var(--border-radius);
-            margin-top: 30px;
-            border: 2px solid var(--border-color);
-        }
-
-        .recipe-output h2 {
-            color: var(--accent-color);
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-
-        #recipeContent {
-            line-height: 1.8;
-            color: var(--secondary-text);
-        }
-
-        #recipeContent p {
-            margin-bottom: 15px;
-        }
-
-        #recipeContent strong {
-            color: var(--accent-color);
-            font-size: 1.1em;
-        }
-
-        .error {
-            background: #ffebee;
-            color: var(--error-color);
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-top: 20px;
-            border-left: 4px solid var(--error-color);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border-color);
-            color: var(--secondary-text);
-            opacity: 0.7;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
-
-            .tagline {
-                font-size: 1em;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <header>
-            <h1>🍳 Chomptron</h1>
-            <p class="tagline">Turn Your Ingredients Into Delicious Recipes</p>
-        </header>
+      <header>
+        <h1>🍳 Chomptron</h1>
+        <p class="tagline">Turn Your Ingredients Into Delicious Recipes</p>
+      </header>
 
-        <main>
-            <div class="input-section">
-                <h2>What's in Your Kitchen?</h2>
-                <textarea 
-                    id="ingredients" 
-                    placeholder="Enter your ingredients (e.g., chicken, tomatoes, garlic, pasta, olive oil)"
-                    rows="5"
-                ></textarea>
-                <button id="generateBtn" onclick="generateRecipe()">Generate Recipe ✨</button>
-            </div>
+      <main>
+        <div class="input-section">
+          <h2>What's in Your Kitchen?</h2>
+          <textarea
+            id="ingredients"
+            placeholder="Enter your ingredients (e.g., chicken, tomatoes, garlic, pasta, olive oil)"
+            rows="5"
+          ></textarea>
+          <button id="generateBtn" onclick="generateRecipe()">
+            Generate Recipe ✨
+          </button>
+        </div>
 
-            <div id="loadingIndicator" class="loading hidden">
-                <div class="spinner"></div>
-                <p>Cooking up something delicious...</p>
-            </div>
+        <div id="loadingIndicator" class="loading hidden">
+          <div class="spinner"></div>
+          <p>Cooking up something delicious...</p>
+        </div>
 
-            <div id="recipeOutput" class="recipe-output hidden">
-                <h2>Your Recipe</h2>
-                <div id="recipeContent"></div>
-                <button onclick="copyRecipe(event)">Copy Recipe 📋</button>
-                <button onclick="clearRecipe()">Generate Another Recipe</button>
-            </div>
+        <div id="recipeOutput" class="recipe-output hidden">
+          <h2>Your Recipe</h2>
+          <div id="recipeContent"></div>
+          <button onclick="copyRecipe(event)">Copy Recipe 📋</button>
+          <button onclick="clearRecipe()">Generate Another Recipe</button>
+        </div>
 
-            <div id="errorMessage" class="error hidden"></div>
-        </main>
+        <div id="errorMessage" class="error hidden"></div>
+      </main>
 
-        <footer>
-            <p>Powered by Google Gemini AI | Chomptron.com | <a href="https://tronswan.com" target="_blank" rel="noopener noreferrer">tronswan.com</a></p>
-        </footer>
+      <footer>
+        <p>
+          Powered by Google Gemini AI | Chomptron.com |
+          <a
+            href="https://tronswan.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            >tronswan.com</a
+          >
+        </p>
+      </footer>
     </div>
 
     <script>
-        async function generateRecipe() {
-            const ingredients = document.getElementById('ingredients').value.trim();
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            const recipeOutput = document.getElementById('recipeOutput');
-            const errorMessage = document.getElementById('errorMessage');
-            const generateBtn = document.getElementById('generateBtn');
+      async function generateRecipe() {
+        const ingredients = document.getElementById("ingredients").value.trim();
+        const loadingIndicator = document.getElementById("loadingIndicator");
+        const recipeOutput = document.getElementById("recipeOutput");
+        const errorMessage = document.getElementById("errorMessage");
+        const generateBtn = document.getElementById("generateBtn");
 
-            errorMessage.classList.add('hidden');
-            recipeOutput.classList.add('hidden');
+        errorMessage.classList.add("hidden");
+        recipeOutput.classList.add("hidden");
 
-            if (!ingredients) {
-                showError('Please enter some ingredients!');
-                return;
-            }
-
-            loadingIndicator.classList.remove('hidden');
-            generateBtn.disabled = true;
-
-            try {
-                const response = await fetch('/api/generate-recipe', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ingredients: ingredients })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    displayRecipe(data.recipe);
-                } else {
-                    showError(data.error || 'Failed to generate recipe');
-                }
-            } catch (error) {
-                showError('Network error: ' + error.message);
-            } finally {
-                loadingIndicator.classList.add('hidden');
-                generateBtn.disabled = false;
-            }
+        if (!ingredients) {
+          showError("Please enter some ingredients!");
+          return;
         }
 
-        function displayRecipe(recipe) {
-            const recipeContent = document.getElementById('recipeContent');
-            const recipeOutput = document.getElementById('recipeOutput');
-            
-            const formattedRecipe = recipe
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n\n/g, '</p><p>')
-                .replace(/\n/g, '<br>');
-            
-            recipeContent.innerHTML = '<p>' + formattedRecipe + '</p>';
-            recipeOutput.classList.remove('hidden');
+        loadingIndicator.classList.remove("hidden");
+        generateBtn.disabled = true;
+
+        try {
+          const response = await fetch("/api/generate-recipe", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ingredients: ingredients }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            displayRecipe(data.recipe);
+          } else {
+            showError(data.error || "Failed to generate recipe");
+          }
+        } catch (error) {
+          showError("Network error: " + error.message);
+        } finally {
+          loadingIndicator.classList.add("hidden");
+          generateBtn.disabled = false;
+        }
+      }
+
+      function displayRecipe(recipe) {
+        const recipeContent = document.getElementById("recipeContent");
+        const recipeOutput = document.getElementById("recipeOutput");
+
+        const formattedRecipe = recipe
+          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+          .replace(/\n\n/g, "</p><p>")
+          .replace(/\n/g, "<br>");
+
+        recipeContent.innerHTML = "<p>" + formattedRecipe + "</p>";
+        recipeOutput.classList.remove("hidden");
+      }
+
+      function showError(message) {
+        const errorMessage = document.getElementById("errorMessage");
+        errorMessage.textContent = message;
+        errorMessage.classList.remove("hidden");
+      }
+
+      function clearRecipe() {
+        document.getElementById("recipeOutput").classList.add("hidden");
+        document.getElementById("ingredients").value = "";
+        document.getElementById("ingredients").focus();
+      }
+
+      function copyRecipe(event) {
+        const recipeContent = document.getElementById("recipeContent");
+        const textContent = recipeContent.innerText;
+        const btn = event.target;
+        const originalText = btn.textContent;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(textContent)
+            .then(() => {
+              btn.textContent = "Copied! ✓";
+              setTimeout(() => {
+                btn.textContent = originalText;
+              }, 2000);
+            })
+            .catch((err) => {
+              console.error("Clipboard error:", err);
+              fallbackCopy(textContent, btn, originalText);
+            });
+        } else {
+          fallbackCopy(textContent, btn, originalText);
+        }
+      }
+
+      function fallbackCopy(text, btn, originalText) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.top = "0";
+        textarea.style.left = "0";
+        textarea.style.opacity = "0";
+        textarea.setAttribute("readonly", "");
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+
+        let success = false;
+        try {
+          success = document.execCommand("copy");
+        } catch (error) {
+          console.error("Fallback copy error:", error);
         }
 
-        function showError(message) {
-            const errorMessage = document.getElementById('errorMessage');
-            errorMessage.textContent = message;
-            errorMessage.classList.remove('hidden');
-        }
+        document.body.removeChild(textarea);
 
-        function clearRecipe() {
-            document.getElementById('recipeOutput').classList.add('hidden');
-            document.getElementById('ingredients').value = '';
-            document.getElementById('ingredients').focus();
+        if (success) {
+          btn.textContent = "Copied! ✓";
+          setTimeout(() => {
+            btn.textContent = originalText;
+          }, 2000);
+        } else {
+          showError("Failed to copy recipe to clipboard");
         }
+      }
 
-        function copyRecipe(event) {
-            const recipeContent = document.getElementById('recipeContent');
-            const textContent = recipeContent.innerText;
-            const btn = event.target;
-            const originalText = btn.textContent;
-            
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(textContent).then(() => {
-                    btn.textContent = 'Copied! ✓';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                    }, 2000);
-                }).catch((err) => {
-                    console.error('Clipboard error:', err);
-                    fallbackCopy(textContent, btn, originalText);
-                });
-            } else {
-                fallbackCopy(textContent, btn, originalText);
-            }
-        }
-
-        function fallbackCopy(text, btn, originalText) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.top = '0';
-            textarea.style.left = '0';
-            textarea.style.opacity = '0';
-            textarea.setAttribute('readonly', '');
-            document.body.appendChild(textarea);
-            textarea.focus();
-            textarea.select();
-            
-            let success = false;
-            try {
-                success = document.execCommand('copy');
-            } catch (error) {
-                console.error('Fallback copy error:', error);
-            }
-            
-            document.body.removeChild(textarea);
-            
-            if (success) {
-                btn.textContent = 'Copied! ✓';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
-            } else {
-                showError('Failed to copy recipe to clipboard');
-            }
-        }
-
-        document.getElementById('ingredients').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                generateRecipe();
-            }
+      document
+        .getElementById("ingredients")
+        .addEventListener("keydown", function (e) {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            generateRecipe();
+          }
         });
     </script>
-</body>
+  </body>
 </html>

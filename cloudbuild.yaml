@@ -1,12 +1,25 @@
 # cloudbuild.yaml
 steps:
   # 1. Build the container image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:latest', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:$SHORT_SHA', '.']
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:latest",
+        "-t",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron:$SHORT_SHA",
+        ".",
+      ]
 
   # 2. Push the image to Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '--all-tags', 'us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron']
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "--all-tags",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/chomptron-repo/chomptron",
+      ]
 
 # Just build and push - deploy manually or via GitHub Actions
 options:

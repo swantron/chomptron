@@ -1,50 +1,52 @@
-const express = require('express');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const express = require("express");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
 const port = process.env.PORT || 8080;
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 app.use(express.json());
-app.use(express.static('.'));
+app.use(express.static("."));
 
 // Serve sitemap.xml with correct content type
-app.get('/sitemap.xml', (req, res) => {
-  res.set('Content-Type', 'application/xml');
-  res.sendFile(__dirname + '/sitemap.xml');
+app.get("/sitemap.xml", (req, res) => {
+  res.set("Content-Type", "application/xml");
+  res.sendFile(__dirname + "/sitemap.xml");
 });
 
 // Serve robots.txt with correct content type
-app.get('/robots.txt', (req, res) => {
-  res.set('Content-Type', 'text/plain');
-  res.sendFile(__dirname + '/robots.txt');
+app.get("/robots.txt", (req, res) => {
+  res.set("Content-Type", "text/plain");
+  res.sendFile(__dirname + "/robots.txt");
 });
 
 // Health check endpoint for Cloud Run
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'healthy', service: 'chomptron' });
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "healthy", service: "chomptron" });
 });
 
 // Readiness check - verifies AI service is configured
-app.get('/ready', (req, res) => {
+app.get("/ready", (req, res) => {
   if (!process.env.GEMINI_API_KEY) {
-    return res.status(503).json({ 
-      status: 'not ready', 
-      error: 'GEMINI_API_KEY not configured' 
+    return res.status(503).json({
+      status: "not ready",
+      error: "GEMINI_API_KEY not configured",
     });
   }
-  res.status(200).json({ status: 'ready', service: 'chomptron' });
+  res.status(200).json({ status: "ready", service: "chomptron" });
 });
 
-app.post('/api/generate-recipe', async (req, res) => {
+app.post("/api/generate-recipe", async (req, res) => {
   try {
     const { ingredients } = req.body;
-    
+
     if (!ingredients) {
-      return res.status(400).json({ success: false, error: 'No ingredients provided' });
+      return res
+        .status(400)
+        .json({ success: false, error: "No ingredients provided" });
     }
 
     const prompt = `You are a creative chef. Create a delicious recipe using these ingredients: ${ingredients}
@@ -64,7 +66,7 @@ Make the recipe practical and delicious!`;
 
     res.json({ success: true, recipe });
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

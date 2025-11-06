@@ -25,6 +25,7 @@ npm test
 ```
 
 Tests validate:
+
 - File structure and dependencies
 - Docker and Cloud Build configurations
 - Health check endpoints (`/health`, `/ready`)
@@ -42,7 +43,8 @@ Tests validate:
 Chomptron is built as a **serverless application** on Google Cloud Run for cost efficiency and automatic scaling.
 
 **Tech Stack:**
-- **Backend:** Node.js 20 + Express  
+
+- **Backend:** Node.js 20 + Express
 - **AI:** Google Gemini 2.0 Flash
 - **Frontend:** Vanilla HTML/CSS/JavaScript
 - **Platform:** Google Cloud Run (serverless)
@@ -50,6 +52,7 @@ Chomptron is built as a **serverless application** on Google Cloud Run for cost 
 - **Domain:** chomptron.com
 
 **Why Serverless?**
+
 - **Scales to zero** when idle → $0 cost (vs. $5-50/month traditional hosting)
 - **Auto-scales** from 0 to 1000+ instances based on traffic
 - **Zero maintenance** - no servers to manage, patch, or configure
@@ -58,12 +61,14 @@ Chomptron is built as a **serverless application** on Google Cloud Run for cost 
 ## Monitoring
 
 Health checks:
+
 ```bash
 curl https://chomptron.com/health
 curl https://chomptron.com/ready
 ```
 
 View logs:
+
 ```bash
 # Recent logs
 gcloud run logs read chomptron --region us-central1 --limit 50
@@ -73,6 +78,7 @@ gcloud run logs tail chomptron --region us-central1
 ```
 
 **Console dashboards:**
+
 - [Cloud Run Service](https://console.cloud.google.com/run)
 - [Cloud Build History](https://console.cloud.google.com/cloud-build/builds)
 - [Artifact Registry](https://console.cloud.google.com/artifacts)
@@ -95,6 +101,5 @@ gcloud run logs tail chomptron --region us-central1
 Optimized for search engines and social sharing with meta tags, Open Graph, Twitter Cards, structured data (JSON-LD), sitemap, robots.txt, and PWA support.
 
 ## License
-
 
 MIT
