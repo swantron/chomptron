@@ -280,6 +280,215 @@
         text-decoration: underline;
       }
 
+      /* History Panel Styles */
+      .history-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--accent-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5em;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: transform var(--transition-speed);
+        z-index: 1000;
+        margin: 0;
+        padding: 0;
+      }
+
+      .history-toggle:hover {
+        transform: scale(1.1);
+      }
+
+      .history-panel {
+        position: fixed;
+        top: 0;
+        right: -400px;
+        width: 400px;
+        height: 100vh;
+        background: white;
+        box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
+        transition: right 0.3s ease;
+        z-index: 999;
+        overflow-y: auto;
+        padding: 20px;
+      }
+
+      .history-panel.open {
+        right: 0;
+      }
+
+      .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      .history-header h3 {
+        color: var(--accent-color);
+        margin: 0;
+      }
+
+      .close-history {
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        cursor: pointer;
+        color: var(--secondary-text);
+        width: auto;
+        padding: 5px 10px;
+        margin: 0;
+      }
+
+      .close-history:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      .history-controls {
+        margin-bottom: 20px;
+      }
+
+      .history-search {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius);
+        margin-bottom: 10px;
+      }
+
+      .history-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .history-buttons button {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: 0.9em;
+        margin: 0;
+      }
+
+      .recipe-item {
+        background: var(--secondary-bg);
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        border: 2px solid var(--border-color);
+        transition: all var(--transition-speed);
+      }
+
+      .recipe-item:hover {
+        border-color: var(--accent-color);
+        transform: translateX(-5px);
+      }
+
+      .recipe-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+
+      .recipe-name {
+        font-weight: bold;
+        color: var(--secondary-text);
+        font-size: 1em;
+        margin: 0;
+      }
+
+      .favorite-btn {
+        background: none;
+        border: none;
+        font-size: 1.3em;
+        cursor: pointer;
+        padding: 0;
+        width: auto;
+        margin: 0;
+        transition: transform var(--transition-speed);
+      }
+
+      .favorite-btn:hover {
+        transform: scale(1.2);
+        box-shadow: none;
+      }
+
+      .recipe-timestamp {
+        font-size: 0.8em;
+        color: #777;
+      }
+
+      .recipe-ingredients-preview {
+        font-size: 0.85em;
+        color: #666;
+        margin-top: 5px;
+        font-style: italic;
+      }
+
+      .empty-history {
+        text-align: center;
+        padding: 40px 20px;
+        color: #999;
+      }
+
+      .recipe-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .recipe-header h2 {
+        margin: 0;
+      }
+
+      .favorite-toggle-btn {
+        margin: 0;
+        padding: 10px 20px;
+        font-size: 1em;
+        background: white;
+        color: var(--secondary-text);
+        border: 2px solid var(--border-color);
+        width: auto;
+      }
+
+      .favorite-toggle-btn.favorited {
+        background: var(--accent-color);
+        color: white;
+        border-color: var(--accent-color);
+      }
+
+      @media (max-width: 768px) {
+        .history-panel {
+          width: 100%;
+          right: -100%;
+        }
+
+        .history-toggle {
+          width: 50px;
+          height: 50px;
+          font-size: 1.2em;
+        }
+
+        .recipe-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .favorite-toggle-btn {
+          width: 100%;
+        }
+      }
+
       @media (max-width: 600px) {
         .container {
           padding: 20px;
@@ -296,6 +505,37 @@
     </style>
   </head>
   <body>
+    <!-- History Toggle Button -->
+    <button class="history-toggle" onclick="toggleHistory()" title="Recipe History">
+      📚
+    </button>
+
+    <!-- History Panel -->
+    <div id="historyPanel" class="history-panel">
+      <div class="history-header">
+        <h3>Recipe History</h3>
+        <button class="close-history" onclick="toggleHistory()">✕</button>
+      </div>
+      <div class="history-controls">
+        <input
+          type="text"
+          id="historySearch"
+          class="history-search"
+          placeholder="Search recipes..."
+          oninput="filterHistory()"
+        />
+        <div class="history-buttons">
+          <button onclick="showFavorites()">⭐ Favorites</button>
+          <button onclick="showAllHistory()">📋 All</button>
+        </div>
+        <div class="history-buttons" style="margin-top: 10px;">
+          <button onclick="exportRecipes()">💾 Export</button>
+          <button onclick="clearHistory()">🗑️ Clear</button>
+        </div>
+      </div>
+      <div id="historyList"></div>
+    </div>
+
     <div class="container">
       <header>
         <h1>🍳 Chomptron</h1>
@@ -321,7 +561,17 @@
         </div>
 
         <div id="recipeOutput" class="recipe-output hidden">
-          <h2>Your Recipe</h2>
+          <div class="recipe-header">
+            <h2>Your Recipe</h2>
+            <button
+              id="favoriteBtn"
+              class="favorite-toggle-btn"
+              onclick="toggleFavorite()"
+              title="Add to favorites"
+            >
+              ☆ Favorite
+            </button>
+          </div>
           <div id="recipeContent"></div>
           <button onclick="copyRecipe(event)">Copy Recipe 📋</button>
           <button onclick="clearRecipe()">Generate Another Recipe</button>
@@ -344,6 +594,275 @@
     </div>
 
     <script>
+      // Recipe History & Favorites Manager
+      const RecipeManager = {
+        storageKey: "chomptron_recipes",
+        currentRecipeId: null,
+
+        getRecipes() {
+          const stored = localStorage.getItem(this.storageKey);
+          return stored ? JSON.parse(stored) : [];
+        },
+
+        saveRecipe(ingredients, recipe) {
+          const recipes = this.getRecipes();
+          const id = Date.now().toString();
+          const recipeName = this.extractRecipeName(recipe);
+
+          const newRecipe = {
+            id,
+            ingredients,
+            recipe,
+            recipeName,
+            timestamp: new Date().toISOString(),
+            favorite: false,
+          };
+
+          recipes.unshift(newRecipe);
+
+          // Keep only last 100 recipes
+          if (recipes.length > 100) {
+            recipes.pop();
+          }
+
+          localStorage.setItem(this.storageKey, JSON.stringify(recipes));
+          this.currentRecipeId = id;
+          return id;
+        },
+
+        extractRecipeName(recipe) {
+          // Try to extract recipe name from first line or heading
+          const lines = recipe.split("\n");
+          for (let line of lines) {
+            const cleaned = line
+              .replace(/\*\*/g, "")
+              .replace(/^#+\s*/, "")
+              .trim();
+            if (cleaned && cleaned.length > 3 && cleaned.length < 100) {
+              return cleaned;
+            }
+          }
+          return "Untitled Recipe";
+        },
+
+        toggleFavorite(id) {
+          const recipes = this.getRecipes();
+          const recipe = recipes.find((r) => r.id === id);
+          if (recipe) {
+            recipe.favorite = !recipe.favorite;
+            localStorage.setItem(this.storageKey, JSON.stringify(recipes));
+          }
+          return recipe?.favorite;
+        },
+
+        deleteRecipe(id) {
+          let recipes = this.getRecipes();
+          recipes = recipes.filter((r) => r.id !== id);
+          localStorage.setItem(this.storageKey, JSON.stringify(recipes));
+        },
+
+        clearAll() {
+          if (
+            confirm(
+              "Are you sure you want to clear all recipe history? This cannot be undone.",
+            )
+          ) {
+            localStorage.removeItem(this.storageKey);
+            this.currentRecipeId = null;
+            renderHistory();
+          }
+        },
+
+        exportToJSON() {
+          const recipes = this.getRecipes();
+          const dataStr = JSON.stringify(recipes, null, 2);
+          const dataBlob = new Blob([dataStr], { type: "application/json" });
+          const url = URL.createObjectURL(dataBlob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `chomptron-recipes-${Date.now()}.json`;
+          link.click();
+          URL.revokeObjectURL(url);
+        },
+
+        exportToText() {
+          const recipes = this.getRecipes();
+          let text = "CHOMPTRON RECIPE COLLECTION\n";
+          text += "=".repeat(50) + "\n\n";
+
+          recipes.forEach((r, index) => {
+            text += `Recipe #${index + 1}: ${r.recipeName}\n`;
+            text += `Date: ${new Date(r.timestamp).toLocaleString()}\n`;
+            text += `Ingredients: ${r.ingredients}\n`;
+            text += `Favorite: ${r.favorite ? "⭐ Yes" : "No"}\n`;
+            text += "-".repeat(50) + "\n";
+            text += r.recipe + "\n";
+            text += "=".repeat(50) + "\n\n";
+          });
+
+          const dataBlob = new Blob([text], { type: "text/plain" });
+          const url = URL.createObjectURL(dataBlob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `chomptron-recipes-${Date.now()}.txt`;
+          link.click();
+          URL.revokeObjectURL(url);
+        },
+      };
+
+      let historyFilter = "all"; // 'all' or 'favorites'
+
+      function toggleHistory() {
+        const panel = document.getElementById("historyPanel");
+        panel.classList.toggle("open");
+        if (panel.classList.contains("open")) {
+          renderHistory();
+        }
+      }
+
+      function renderHistory(searchQuery = "") {
+        const recipes = RecipeManager.getRecipes();
+        const historyList = document.getElementById("historyList");
+
+        let filtered = recipes;
+
+        // Apply favorites filter
+        if (historyFilter === "favorites") {
+          filtered = recipes.filter((r) => r.favorite);
+        }
+
+        // Apply search filter
+        if (searchQuery) {
+          const query = searchQuery.toLowerCase();
+          filtered = filtered.filter(
+            (r) =>
+              r.recipeName.toLowerCase().includes(query) ||
+              r.ingredients.toLowerCase().includes(query) ||
+              r.recipe.toLowerCase().includes(query),
+          );
+        }
+
+        if (filtered.length === 0) {
+          historyList.innerHTML = `
+            <div class="empty-history">
+              <p>${historyFilter === "favorites" ? "No favorite recipes yet" : searchQuery ? "No recipes found" : "No recipes yet"}</p>
+              <p style="font-size: 0.9em;">Generate recipes to see them here!</p>
+            </div>
+          `;
+          return;
+        }
+
+        historyList.innerHTML = filtered
+          .map(
+            (r) => `
+          <div class="recipe-item" onclick="loadRecipe('${r.id}')">
+            <div class="recipe-item-header">
+              <div class="recipe-name">${r.recipeName}</div>
+              <button class="favorite-btn" onclick="event.stopPropagation(); toggleRecipeFavorite('${r.id}')">
+                ${r.favorite ? "⭐" : "☆"}
+              </button>
+            </div>
+            <div class="recipe-timestamp">${new Date(r.timestamp).toLocaleString()}</div>
+            <div class="recipe-ingredients-preview">${r.ingredients.substring(0, 60)}${r.ingredients.length > 60 ? "..." : ""}</div>
+          </div>
+        `,
+          )
+          .join("");
+      }
+
+      function filterHistory() {
+        const searchQuery = document.getElementById("historySearch").value;
+        renderHistory(searchQuery);
+      }
+
+      function showFavorites() {
+        historyFilter = "favorites";
+        document.getElementById("historySearch").value = "";
+        renderHistory();
+      }
+
+      function showAllHistory() {
+        historyFilter = "all";
+        document.getElementById("historySearch").value = "";
+        renderHistory();
+      }
+
+      function loadRecipe(id) {
+        const recipes = RecipeManager.getRecipes();
+        const recipe = recipes.find((r) => r.id === id);
+        if (recipe) {
+          RecipeManager.currentRecipeId = id;
+          document.getElementById("ingredients").value = recipe.ingredients;
+          displayRecipe(recipe.recipe);
+          updateFavoriteButton();
+          toggleHistory();
+          // Scroll to recipe
+          document
+            .getElementById("recipeOutput")
+            .scrollIntoView({ behavior: "smooth" });
+        }
+      }
+
+      function toggleRecipeFavorite(id) {
+        const isFavorite = RecipeManager.toggleFavorite(id);
+        renderHistory(document.getElementById("historySearch").value);
+        if (id === RecipeManager.currentRecipeId) {
+          updateFavoriteButton();
+        }
+      }
+
+      function toggleFavorite() {
+        if (RecipeManager.currentRecipeId) {
+          const isFavorite = RecipeManager.toggleFavorite(
+            RecipeManager.currentRecipeId,
+          );
+          updateFavoriteButton();
+        }
+      }
+
+      function updateFavoriteButton() {
+        const btn = document.getElementById("favoriteBtn");
+        if (!RecipeManager.currentRecipeId) {
+          btn.classList.remove("favorited");
+          btn.innerHTML = "☆ Favorite";
+          return;
+        }
+
+        const recipes = RecipeManager.getRecipes();
+        const recipe = recipes.find(
+          (r) => r.id === RecipeManager.currentRecipeId,
+        );
+        if (recipe?.favorite) {
+          btn.classList.add("favorited");
+          btn.innerHTML = "⭐ Favorited";
+        } else {
+          btn.classList.remove("favorited");
+          btn.innerHTML = "☆ Favorite";
+        }
+      }
+
+      function exportRecipes() {
+        const recipes = RecipeManager.getRecipes();
+        if (recipes.length === 0) {
+          alert("No recipes to export!");
+          return;
+        }
+
+        if (
+          confirm(
+            "Export as JSON (for backup) or Text (for reading)?\n\nOK = JSON, Cancel = Text",
+          )
+        ) {
+          RecipeManager.exportToJSON();
+        } else {
+          RecipeManager.exportToText();
+        }
+      }
+
+      function clearHistory() {
+        RecipeManager.clearAll();
+      }
+
       async function generateRecipe() {
         const ingredients = document.getElementById("ingredients").value.trim();
         const loadingIndicator = document.getElementById("loadingIndicator");
@@ -374,7 +893,10 @@
           const data = await response.json();
 
           if (data.success) {
+            // Save to history
+            RecipeManager.saveRecipe(ingredients, data.recipe);
             displayRecipe(data.recipe);
+            updateFavoriteButton();
           } else {
             showError(data.error || "Failed to generate recipe");
           }
@@ -409,6 +931,8 @@
         document.getElementById("recipeOutput").classList.add("hidden");
         document.getElementById("ingredients").value = "";
         document.getElementById("ingredients").focus();
+        RecipeManager.currentRecipeId = null;
+        updateFavoriteButton();
       }
 
       function copyRecipe(event) {

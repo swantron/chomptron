@@ -95,6 +95,11 @@ gcloud run logs tail chomptron --region us-central1
 - 🔎 SEO optimized with meta tags, Open Graph, Twitter Cards, and structured data
 - 📱 PWA support with manifest.json
 - 🤖 robots.txt and sitemap.xml for search engine indexing
+- 📚 Recipe history with localStorage persistence
+- ⭐ Favorites system to mark and filter beloved recipes
+- 🔍 Search and filter through saved recipes
+- 💾 Export recipes to JSON or text format
+- 📋 Quick access to past recipes via sidebar panel
 
 ## SEO Features
 
