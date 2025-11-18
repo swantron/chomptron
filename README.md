@@ -31,6 +31,25 @@ Tests validate:
 - Health check endpoints (`/health`, `/ready`)
 - Recipe generation API
 - Frontend functionality
+- Recipe history and favorites features (40+ static tests)
+
+### Browser-Based History Tests
+
+For interactive testing of the Recipe History & Favorites feature:
+
+```bash
+npm start
+# Visit http://localhost:8080/test-history.html
+```
+
+The browser test suite includes:
+- localStorage persistence testing
+- Recipe save/load operations
+- Favorite toggle functionality
+- Recipe name extraction
+- 100-recipe limit validation
+- Data structure validation
+- Automatic backup/restore of existing data
 
 ## Health Checks
 

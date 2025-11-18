@@ -74,6 +74,121 @@ assert(html.includes("recipe"), "HTML mentions recipes");
 assert(html.includes("/api/generate-recipe"), "HTML calls recipe API");
 assert(html.includes("ingredients"), "HTML has ingredients input");
 
+// Recipe History & Favorites feature tests
+console.log("\nRecipe History & Favorites Tests:");
+assert(
+  html.includes("RecipeManager"),
+  "HTML includes RecipeManager object",
+);
+assert(
+  html.includes("chomptron_recipes"),
+  "HTML defines recipe storage key",
+);
+assert(html.includes("getRecipes"), "HTML has getRecipes function");
+assert(html.includes("saveRecipe"), "HTML has saveRecipe function");
+assert(html.includes("toggleFavorite"), "HTML has toggleFavorite function");
+assert(html.includes("exportToJSON"), "HTML has exportToJSON function");
+assert(html.includes("exportToText"), "HTML has exportToText function");
+assert(html.includes("clearAll"), "HTML has clearAll function");
+assert(
+  html.includes("extractRecipeName"),
+  "HTML has recipe name extraction",
+);
+assert(html.includes("renderHistory"), "HTML has renderHistory function");
+assert(html.includes("filterHistory"), "HTML has filterHistory function");
+assert(html.includes("showFavorites"), "HTML has showFavorites function");
+assert(html.includes("showAllHistory"), "HTML has showAllHistory function");
+assert(html.includes("loadRecipe"), "HTML has loadRecipe function");
+assert(
+  html.includes("updateFavoriteButton"),
+  "HTML has updateFavoriteButton function",
+);
+
+// UI Component tests
+console.log("\nHistory UI Component Tests:");
+assert(
+  html.includes('class="history-toggle"'),
+  "HTML has history toggle button",
+);
+assert(
+  html.includes('id="historyPanel"'),
+  "HTML has history panel element",
+);
+assert(
+  html.includes('id="historySearch"'),
+  "HTML has history search input",
+);
+assert(html.includes('id="historyList"'), "HTML has history list container");
+assert(
+  html.includes('id="favoriteBtn"'),
+  "HTML has favorite toggle button",
+);
+assert(html.includes("toggleHistory"), "HTML has toggleHistory function");
+assert(html.includes("exportRecipes"), "HTML has exportRecipes function");
+assert(html.includes("clearHistory"), "HTML has clearHistory function");
+
+// CSS styling tests
+console.log("\nHistory Styling Tests:");
+assert(
+  html.includes(".history-toggle"),
+  "HTML has history toggle button styles",
+);
+assert(html.includes(".history-panel"), "HTML has history panel styles");
+assert(html.includes(".recipe-item"), "HTML has recipe item styles");
+assert(html.includes(".favorite-btn"), "HTML has favorite button styles");
+assert(html.includes(".empty-history"), "HTML has empty state styles");
+assert(
+  html.includes(".history-panel.open"),
+  "HTML has open panel state styles",
+);
+assert(
+  html.includes(".favorite-toggle-btn"),
+  "HTML has favorite toggle styles",
+);
+
+// Mobile responsive tests
+console.log("\nMobile Responsive Tests:");
+assert(
+  html.includes("@media (max-width: 768px)"),
+  "HTML has tablet breakpoint",
+);
+assert(
+  html.includes("@media (max-width: 600px)"),
+  "HTML has mobile breakpoint",
+);
+
+// localStorage integration tests
+console.log("\nLocalStorage Integration Tests:");
+assert(
+  html.includes("localStorage.getItem"),
+  "HTML uses localStorage.getItem",
+);
+assert(
+  html.includes("localStorage.setItem"),
+  "HTML uses localStorage.setItem",
+);
+assert(
+  html.includes("localStorage.removeItem"),
+  "HTML uses localStorage.removeItem",
+);
+assert(html.includes("JSON.parse"), "HTML parses stored JSON");
+assert(html.includes("JSON.stringify"), "HTML stringifies data for storage");
+
+// Recipe save integration
+console.log("\nRecipe Save Integration Tests:");
+assert(
+  html.includes("RecipeManager.saveRecipe(ingredients, data.recipe)"),
+  "HTML auto-saves recipes on generation",
+);
+assert(
+  html.includes("RecipeManager.currentRecipeId"),
+  "HTML tracks current recipe ID",
+);
+assert(
+  html.match(/if\s*\(\s*recipes\.length\s*>\s*100\s*\)/),
+  "HTML limits history to 100 recipes",
+);
+
 // Node.js version check
 console.log("\nEnvironment Tests:");
 const nodeVersion = parseInt(process.version.slice(1).split(".")[0]);
