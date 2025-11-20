@@ -134,16 +134,38 @@
       header {
         text-align: center;
         margin-bottom: 40px;
+        position: relative;
+      }
+
+      .header-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .title-background {
+        color: var(--accent-color);
+        padding: 30px 40px;
+        font-size: 4em;
+        font-weight: bold;
+        letter-spacing: 0.1em;
+        text-transform: lowercase;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
       }
 
       .logo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         max-width: 400px;
-        width: 100%;
+        width: 60%;
         height: auto;
-        margin-bottom: 20px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+        z-index: 2;
+        pointer-events: none;
       }
 
       h1 {
@@ -151,6 +173,7 @@
         color: var(--accent-color);
         margin-bottom: 20px;
         margin-top: 0;
+        display: none;
       }
 
       .tagline {
@@ -505,6 +528,15 @@
           padding: 20px;
         }
 
+        .header-wrapper {
+          max-width: 100%;
+        }
+
+        .title-background {
+          font-size: 2.5em;
+          padding: 20px 20px;
+        }
+
         .logo {
           max-width: 250px;
         }
@@ -553,8 +585,10 @@
 
     <div class="container">
       <header>
-        <h1>Chomptron</h1>
-        <img src="/chomptron.png" alt="Chomptron Logo" class="logo" />
+        <div class="header-wrapper">
+          <div class="title-background">chomp tron dot com</div>
+          <img src="/chomptron.png" alt="Chomptron Logo" class="logo" />
+        </div>
         <p class="tagline">Turn Your Ingredients Into Delicious Recipes</p>
       </header>
 
