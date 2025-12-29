@@ -11,7 +11,7 @@ Enter ingredients you have in your kitchen, and Chomptron generates creative, pr
 ```bash
 npm install
 export GEMINI_API_KEY="your-api-key-here"
-export GEMINI_MODEL="gemini-1.5-flash"  # Optional, defaults to gemini-1.5-flash
+export GEMINI_MODEL="gemini-2.5-flash-lite"  # Optional, defaults to gemini-2.5-flash-lite
 npm start
 ```
 
@@ -23,22 +23,36 @@ Get API key: https://makersuite.google.com/app/apikey
 
 The Gemini model can be configured via the `GEMINI_MODEL` environment variable:
 
-- **`gemini-1.5-flash`** (default, recommended) - Best free tier limits, fast and efficient
-- **`gemini-1.5-flash-latest`** - Latest 1.5 flash model
-- **`gemini-2.0-flash`** - Newer model but stricter free tier limits
+**Recommended Models (as of December 2025):**
 
-**Free Tier Quota Issues?**
+- **`gemini-2.5-flash-lite`** (default) - **Best free tier limits**: 15 RPM, 1,000 RPD
+- **`gemini-2.5-flash`** - 10 RPM, 250 RPD
+- **`gemini-2.0-flash`** - 10 RPM, 200 RPD (⚠️ unstable quota, often shows `limit: 0`)
+- **`gemini-1.5-flash`** - Legacy model, may have better limits than 2.0
 
-If you're hitting quota limits:
-1. **Switch to `gemini-1.5-flash`** - It typically has better free tier limits than 2.0
-2. **Check your usage** - Visit `/api/usage` endpoint or https://ai.dev/usage
-3. **Enable billing** - Free tier quotas don't reset monthly; paid tier has higher limits
-4. **Monitor usage** - The app tracks requests and quota errors in logs
+**December 2025 Quota Shift:**
 
-**Quota Limits:**
-- Free tier has daily and per-minute request limits
-- Limits vary by model (1.5-flash usually has better limits)
-- Quotas don't automatically reset - you may need to enable billing for higher limits
+Google overhauled free tier quotas in December 2025:
+- `gemini-2.0-flash` was removed from fully unauthenticated free tier
+- Many accounts see `limit: 0` errors for newer models without billing enabled
+- Free tier quotas don't automatically reset monthly
+
+**Fixing "Limit: 0" Errors:**
+
+If you're seeing quota errors with `limit: 0`:
+1. **Switch to `gemini-2.5-flash-lite`** - Best free tier model currently available
+2. **Enable billing (Pay-As-You-Go)** - Linking a credit card (even if you don't spend) moves you from "Limited Free" to "Tier 1" and unlocks promised free quotas
+3. **Check your region** - EEA, UK, and Switzerland have restricted free tier access
+4. **Monitor usage** - Visit `/api/usage` endpoint or https://ai.dev/usage
+
+**Free Tier Limits (as of Dec 2025):**
+
+| Model | Requests/Minute | Requests/Day | Best For |
+|------|----------------|--------------|----------|
+| **gemini-2.5-flash-lite** | **15** | **1,000** | **High-volume apps** |
+| gemini-2.5-flash | 10 | 250 | General use |
+| gemini-2.0-flash | 10 | 200 | Legacy (unstable) |
+| gemini-2.5-pro | 2 | 50 | Complex reasoning |
 
 ## Testing
 

@@ -5,11 +5,16 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 // Initialize Gemini
-// Model options:
-// - gemini-1.5-flash (recommended for free tier - better limits)
-// - gemini-1.5-flash-latest
-// - gemini-2.0-flash (newer but stricter free tier limits)
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-1.5-flash";
+// Model options (as of December 2025):
+// - gemini-2.5-flash-lite (RECOMMENDED - best free tier: 15 RPM, 1000 RPD)
+// - gemini-2.5-flash (10 RPM, 250 RPD)
+// - gemini-2.0-flash (10 RPM, 200 RPD - unstable quota, often shows limit: 0)
+// - gemini-1.5-flash (legacy, may have better limits than 2.0)
+// 
+// Note: December 2025 quota shift removed gemini-2.0-flash from fully free tier.
+// If you see "limit: 0" errors, try enabling billing (pay-as-you-go) even if you
+// stay within free usage - this unlocks Tier 1 quotas.
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
 
@@ -193,8 +198,20 @@ Make the recipe practical and delicious!`;
       if (retrySeconds) {
         errorMessage += `Please try again in ${retrySeconds} seconds. `;
       }
-      errorMessage += `The free tier has daily and per-minute limits. Current model: ${GEMINI_MODEL}. `;
-      errorMessage += "If this persists, consider switching to gemini-1.5-flash or enabling billing. Check your quota at https://ai.dev/usage";
+      errorMessage += `Current model: ${GEMINI_MODEL}. `;
+      
+      // Provide helpful guidance based on the error
+      if (error.message && error.message.includes("limit: 0")) {
+        errorMessage += "⚠️ Seeing 'limit: 0'? This often means the model was removed from fully free tier. ";
+        errorMessage += "Try switching to gemini-2.5-flash-lite or enable billing (pay-as-you-go) to unlock Tier 1 quotas. ";
+      } else {
+        errorMessage += "The free tier has daily and per-minute limits. ";
+        if (GEMINI_MODEL !== "gemini-2.5-flash-lite") {
+          errorMessage += "Consider switching to gemini-2.5-flash-lite for better free tier limits (15 RPM, 1000 RPD). ";
+        }
+        errorMessage += "You can also enable billing to access higher limits. ";
+      }
+      errorMessage += "Check your quota at https://ai.dev/usage";
       
       return res.status(429).json({
         success: false,

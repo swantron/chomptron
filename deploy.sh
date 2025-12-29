@@ -5,8 +5,8 @@ set -e
 
 echo "Deploying chomptron to Cloud Run..."
 
-# To set the model (e.g., to use gemini-1.5-flash), add:
-#   --set-env-vars GEMINI_MODEL=gemini-1.5-flash
+# To set the model (recommended: gemini-2.5-flash-lite for best free tier limits), add:
+#   --set-env-vars GEMINI_MODEL=gemini-2.5-flash-lite
 # Or update via Cloud Console: Cloud Run > chomptron > Edit & Deploy > Variables & Secrets
 
 gcloud run deploy chomptron \
