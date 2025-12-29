@@ -11,12 +11,34 @@ Enter ingredients you have in your kitchen, and Chomptron generates creative, pr
 ```bash
 npm install
 export GEMINI_API_KEY="your-api-key-here"
+export GEMINI_MODEL="gemini-1.5-flash"  # Optional, defaults to gemini-1.5-flash
 npm start
 ```
 
 Visit http://localhost:8080
 
 Get API key: https://makersuite.google.com/app/apikey
+
+### Model Configuration
+
+The Gemini model can be configured via the `GEMINI_MODEL` environment variable:
+
+- **`gemini-1.5-flash`** (default, recommended) - Best free tier limits, fast and efficient
+- **`gemini-1.5-flash-latest`** - Latest 1.5 flash model
+- **`gemini-2.0-flash`** - Newer model but stricter free tier limits
+
+**Free Tier Quota Issues?**
+
+If you're hitting quota limits:
+1. **Switch to `gemini-1.5-flash`** - It typically has better free tier limits than 2.0
+2. **Check your usage** - Visit `/api/usage` endpoint or https://ai.dev/usage
+3. **Enable billing** - Free tier quotas don't reset monthly; paid tier has higher limits
+4. **Monitor usage** - The app tracks requests and quota errors in logs
+
+**Quota Limits:**
+- Free tier has daily and per-minute request limits
+- Limits vary by model (1.5-flash usually has better limits)
+- Quotas don't automatically reset - you may need to enable billing for higher limits
 
 ## Testing
 
@@ -51,10 +73,11 @@ The browser test suite includes:
 - Data structure validation
 - Automatic backup/restore of existing data
 
-## Health Checks
+## API Endpoints
 
 - **`GET /health`** - Liveness check, returns service status
-- **`GET /ready`** - Readiness check, verifies AI configuration
+- **`GET /ready`** - Readiness check, verifies AI configuration and shows current model
+- **`GET /api/usage`** - Usage statistics (total requests, quota errors, model info)
 - **`POST /api/generate-recipe`** - Main recipe generation endpoint
 
 ## Architecture
@@ -64,7 +87,7 @@ Chomptron is built as a **serverless application** on Google Cloud Run for cost 
 **Tech Stack:**
 
 - **Backend:** Node.js 20 + Express
-- **AI:** Google Gemini 2.0 Flash
+- **AI:** Google Gemini (configurable model, defaults to gemini-1.5-flash)
 - **Frontend:** Vanilla HTML/CSS/JavaScript
 - **Platform:** Google Cloud Run (serverless)
 - **CI/CD:** Cloud Build

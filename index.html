@@ -917,6 +917,10 @@
         RecipeManager.clearAll();
       }
 
+      // Rate limiting: prevent requests more than once per 2 seconds
+      let lastRequestTime = 0;
+      const MIN_REQUEST_INTERVAL = 2000; // 2 seconds
+
       async function generateRecipe() {
         const ingredients = document.getElementById("ingredients").value.trim();
         const loadingIndicator = document.getElementById("loadingIndicator");
@@ -931,6 +935,16 @@
           showError("Please enter some ingredients!");
           return;
         }
+
+        // Client-side rate limiting
+        const now = Date.now();
+        const timeSinceLastRequest = now - lastRequestTime;
+        if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
+          const waitTime = Math.ceil((MIN_REQUEST_INTERVAL - timeSinceLastRequest) / 1000);
+          showError(`Please wait ${waitTime} second${waitTime > 1 ? 's' : ''} before making another request.`);
+          return;
+        }
+        lastRequestTime = now;
 
         loadingIndicator.classList.remove("hidden");
         generateBtn.disabled = true;
@@ -952,7 +966,14 @@
             displayRecipe(data.recipe);
             updateFavoriteButton();
           } else {
-            showError(data.error || "Failed to generate recipe");
+            // Handle quota errors with retry countdown
+            if (data.quotaExceeded && data.retryAfter) {
+              showQuotaError(data.error, data.retryAfter);
+              // Update last request time to prevent immediate retry
+              lastRequestTime = Date.now() + (data.retryAfter * 1000);
+            } else {
+              showError(data.error || "Failed to generate recipe");
+            }
           }
         } catch (error) {
           showError("Network error: " + error.message);
@@ -979,6 +1000,25 @@
         const errorMessage = document.getElementById("errorMessage");
         errorMessage.textContent = message;
         errorMessage.classList.remove("hidden");
+      }
+
+      function showQuotaError(message, retryAfter) {
+        const errorMessage = document.getElementById("errorMessage");
+        let secondsLeft = retryAfter;
+        
+        const updateMessage = () => {
+          if (secondsLeft > 0) {
+            errorMessage.textContent = `${message} Retrying automatically in ${secondsLeft} seconds...`;
+            errorMessage.classList.remove("hidden");
+            secondsLeft--;
+            setTimeout(updateMessage, 1000);
+          } else {
+            errorMessage.textContent = "You can try again now!";
+            errorMessage.classList.remove("hidden");
+          }
+        };
+        
+        updateMessage();
       }
 
       function clearRecipe() {

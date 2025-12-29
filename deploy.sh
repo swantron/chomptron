@@ -5,6 +5,10 @@ set -e
 
 echo "Deploying chomptron to Cloud Run..."
 
+# To set the model (e.g., to use gemini-1.5-flash), add:
+#   --set-env-vars GEMINI_MODEL=gemini-1.5-flash
+# Or update via Cloud Console: Cloud Run > chomptron > Edit & Deploy > Variables & Secrets
+
 gcloud run deploy chomptron \
   --image us-central1-docker.pkg.dev/chomptron/chomptron-repo/chomptron:latest \
   --region us-central1 \
