@@ -118,7 +118,7 @@ const extractRetryDelay = (error) => {
         }
       }
     }
-  } catch (e) {
+  } catch {
     // Fallback if parsing fails
   }
   return null;

@@ -227,7 +227,7 @@ setTimeout(() => {
           json.service === "chomptron",
           "/health endpoint identifies as chomptron",
         );
-      } catch (e) {
+      } catch {
         assert(false, "/health endpoint returns valid JSON");
       }
 
@@ -246,7 +246,7 @@ setTimeout(() => {
               "/ready endpoint returns 200 or 503",
             );
             assert(json.status !== undefined, "/ready endpoint returns status");
-          } catch (e) {
+          } catch {
             assert(false, "/ready endpoint returns valid JSON");
           }
 
@@ -264,7 +264,7 @@ setTimeout(() => {
         });
       });
 
-      readyReq.on("error", (e) => {
+      readyReq.on("error", () => {
         assert(false, "/ready endpoint is accessible");
         server.close();
         process.exit(1);
@@ -274,7 +274,7 @@ setTimeout(() => {
     });
   });
 
-  healthReq.on("error", (e) => {
+  healthReq.on("error", () => {
     assert(false, "/health endpoint is accessible");
     server.close();
     process.exit(1);
