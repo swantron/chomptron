@@ -19,6 +19,12 @@ Visit http://localhost:8080
 
 Get API key: https://makersuite.google.com/app/apikey
 
+### Environment Variables
+
+- **`GEMINI_API_KEY`** (required) - Your Google Gemini API key
+- **`GEMINI_MODEL`** (optional) - Model to use, defaults to `gemini-2.5-flash-lite`
+- **`PORT`** (optional) - Server port, defaults to 8080
+
 ### Model Configuration
 
 The Gemini model can be configured via the `GEMINI_MODEL` environment variable:
@@ -93,6 +99,30 @@ The browser test suite includes:
 - **`GET /ready`** - Readiness check, verifies AI configuration and shows current model
 - **`GET /api/usage`** - Usage statistics (total requests, quota errors, model info)
 - **`POST /api/generate-recipe`** - Main recipe generation endpoint
+  - **Request Body:**
+    ```json
+    {
+      "ingredients": "chicken, tomatoes, garlic",
+      "dietaryPreferences": {
+        "vegan": false,
+        "vegetarian": false,
+        "glutenFree": false,
+        "dairyFree": false,
+        "nutFree": false,
+        "shellfishFree": false,
+        "eggFree": false,
+        "soyFree": false
+      }
+    }
+    ```
+  - **Response:**
+    ```json
+    {
+      "success": true,
+      "recipe": "**Recipe Name:** ...",
+      "cached": false
+    }
+    ```
 
 ## Architecture
 
@@ -101,8 +131,9 @@ Chomptron is built as a **serverless application** on Google Cloud Run for cost 
 **Tech Stack:**
 
 - **Backend:** Node.js 20 + Express
-- **AI:** Google Gemini (configurable model, defaults to gemini-1.5-flash)
-- **Frontend:** Vanilla HTML/CSS/JavaScript
+- **AI:** Google Gemini (configurable model, defaults to gemini-2.5-flash-lite)
+- **Frontend:** Vanilla HTML/CSS/JavaScript (no frameworks)
+- **Storage:** Browser localStorage for recipe history
 - **Platform:** Google Cloud Run (serverless)
 - **CI/CD:** Cloud Build
 - **Domain:** chomptron.com
@@ -114,6 +145,48 @@ Chomptron is built as a **serverless application** on Google Cloud Run for cost 
 - **Zero maintenance** - no servers to manage, patch, or configure
 - **Perfect for AI workloads** - handles burst traffic and CPU-intensive recipe generation efficiently
 
+**Performance Optimizations:**
+
+- **In-Memory Caching**: Per-instance recipe cache (24-hour TTL, max 100 recipes)
+- **Structured Recipe Parsing**: Extracts recipe components for better display and scaling
+- **Client-Side Rate Limiting**: Prevents excessive API calls
+- **Smart Retry Logic**: Handles quota errors gracefully with exponential backoff
+
+## Usage Guide
+
+### Generating Recipes
+
+1. Enter your ingredients in the text area
+2. (Optional) Select dietary preferences/allergies
+3. Click "Generate Recipe ✨"
+4. View your structured recipe with:
+   - Recipe name and metadata
+   - Scaled ingredients list
+   - Step-by-step instructions
+   - Cooking tips
+
+### Recipe Features
+
+- **Scale Servings**: Use +/- buttons to adjust serving size (0.25x to 4x)
+- **Rate Recipes**: Click stars to rate recipes (1-5 stars)
+- **Add Notes**: Type personal notes in the notes field
+- **Favorite**: Click the star button to favorite recipes
+- **Print**: Click print button for print-friendly view
+- **Share**: Click share button to generate shareable URL
+
+### Recipe History
+
+- Click the 📚 button (top-right) to open recipe history
+- Search recipes by name, ingredients, or content
+- Filter by favorites
+- Export all recipes as JSON or text
+- Click any recipe to reload it
+
+### Dark Mode
+
+- Click the 🌙 button (top-left) to toggle dark/light mode
+- Preference is saved automatically
+
 ## Monitoring
 
 Health checks:
@@ -121,6 +194,7 @@ Health checks:
 ```bash
 curl https://chomptron.com/health
 curl https://chomptron.com/ready
+curl https://chomptron.com/api/usage  # View usage statistics
 ```
 
 View logs:
@@ -141,25 +215,94 @@ gcloud run logs tail chomptron --region us-central1
 
 ## Features
 
-- ✨ AI-powered recipe generation
+### Core Functionality
+- ✨ AI-powered recipe generation using Google Gemini
 - 🍳 Creative recipe names and instructions
 - 📏 Precise measurements and serving sizes
-- ⏱️ Cooking time estimates
-- 🎨 Clean, responsive UI
-- ⚡ Serverless, auto-scaling infrastructure
-- 🔍 Health monitoring and readiness checks
-- 🔎 SEO optimized with meta tags, Open Graph, Twitter Cards, and structured data
-- 📱 PWA support with manifest.json
-- 🤖 robots.txt and sitemap.xml for search engine indexing
-- 📚 Recipe history with localStorage persistence
+- ⏱️ Cooking time estimates (prep, cook, total time)
+- 🎨 Clean, responsive UI with dark/light mode toggle
+- ⚡ Serverless, auto-scaling infrastructure on Google Cloud Run
+
+### Recipe Management
+- 📚 Recipe history with localStorage persistence (up to 100 recipes)
 - ⭐ Favorites system to mark and filter beloved recipes
 - 🔍 Search and filter through saved recipes
 - 💾 Export recipes to JSON or text format
 - 📋 Quick access to past recipes via sidebar panel
+- 📝 Add personal notes to each recipe
+- ⭐ Rate recipes with 5-star rating system
+
+### Recipe Customization
+- 🥗 **Dietary Preferences & Allergies**: Vegan, Vegetarian, Gluten-Free, Dairy-Free, Nut-Free, Shellfish-Free, Egg-Free, Soy-Free
+- 📊 **Recipe Scaling**: Adjust serving sizes from 0.25x to 4x with automatic ingredient scaling
+- 🖨️ **Print-Friendly View**: Clean print layout optimized for printing recipes
+- 🔗 **Shareable URLs**: Generate shareable links for recipes (Web Share API support)
+
+### Recipe Display
+- 📋 **Structured Recipe Format**: Parsed display with organized sections:
+  - Recipe name
+  - Serving size and timing information
+  - Ingredients list
+  - Step-by-step instructions
+  - Cooking tips
+- 🎨 **Dark/Light Mode**: Toggle between themes with persistent preference
+
+### Performance & Optimization
+- 💾 **Recipe Caching**: In-memory cache reduces API calls for similar ingredient combinations
+- 🔄 **Smart Retry Logic**: Automatic retry with exponential backoff for quota errors
+- ⚡ **Rate Limiting**: Client-side rate limiting prevents excessive API calls
+
+### Technical Features
+- 🔍 Health monitoring and readiness checks
+- 🔎 SEO optimized with meta tags, Open Graph, Twitter Cards, and structured data
+- 📱 PWA support with manifest.json
+- 🤖 robots.txt and sitemap.xml for search engine indexing
+
+## Recipe Data Structure
+
+Recipes are stored in browser localStorage with the following structure:
+
+```json
+{
+  "id": "timestamp",
+  "ingredients": "chicken, tomatoes, garlic",
+  "recipe": "Full recipe text...",
+  "recipeName": "Extracted recipe name",
+  "timestamp": "2025-01-01T00:00:00.000Z",
+  "favorite": false,
+  "rating": 0,
+  "notes": "",
+  "servingSize": 4,
+  "dietaryPreferences": {
+    "vegan": false,
+    "vegetarian": false,
+    "glutenFree": false,
+    "dairyFree": false,
+    "nutFree": false,
+    "shellfishFree": false,
+    "eggFree": false,
+    "soyFree": false
+  }
+}
+```
+
+## Caching Strategy
+
+The application uses in-memory caching on the server side:
+
+- **Cache Key**: Normalized ingredients + dietary preferences
+- **TTL**: 24 hours
+- **Max Size**: 100 recipes per instance
+- **Scope**: Per-instance (serverless instances are ephemeral)
+- **Benefits**: Reduces API calls for similar requests hitting the same instance
 
 ## SEO Features
 
 Optimized for search engines and social sharing with meta tags, Open Graph, Twitter Cards, structured data (JSON-LD), sitemap, robots.txt, and PWA support.
+
+## Contributing
+
+This is a personal project, but suggestions and improvements are welcome!
 
 ## License
 

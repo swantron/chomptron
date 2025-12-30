@@ -28,6 +28,22 @@ let usageStats = {
   model: GEMINI_MODEL,
 };
 
+// Simple in-memory recipe cache (per-instance, helps with concurrent requests)
+// Note: Serverless instances are ephemeral, but this helps with burst traffic on same instance
+const recipeCache = new Map();
+const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+const MAX_CACHE_SIZE = 100; // Limit cache size
+
+// Helper to create cache key from ingredients
+const createCacheKey = (ingredients, dietaryPrefs = {}) => {
+  const normalized = ingredients.toLowerCase().trim().replace(/\s+/g, ' ');
+  const prefs = Object.keys(dietaryPrefs)
+    .filter(k => dietaryPrefs[k])
+    .sort()
+    .join(',');
+  return `${normalized}|${prefs}`;
+};
+
 console.log(`Initialized Gemini with model: ${GEMINI_MODEL}`);
 
 app.use(express.json());
@@ -155,7 +171,7 @@ const generateContentWithRetry = async (prompt, maxRetries = 3) => {
 
 app.post("/api/generate-recipe", async (req, res) => {
   try {
-    const { ingredients } = req.body;
+    const { ingredients, dietaryPreferences = {} } = req.body;
 
     if (!ingredients) {
       return res
@@ -167,23 +183,77 @@ app.post("/api/generate-recipe", async (req, res) => {
     usageStats.totalRequests++;
     usageStats.lastRequestTime = new Date().toISOString();
 
-    const prompt = `You are a creative chef. Create a delicious recipe using these ingredients: ${ingredients}
+    // Check cache first
+    const cacheKey = createCacheKey(ingredients, dietaryPreferences);
+    const cached = recipeCache.get(cacheKey);
+    if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+      console.log(`Cache hit for: ${ingredients.substring(0, 50)}...`);
+      usageStats.successfulRequests++;
+      return res.json({ 
+        success: true, 
+        recipe: cached.recipe,
+        cached: true 
+      });
+    }
 
-Please provide:
-1. A creative recipe name
-2. List of ingredients with measurements
-3. Step-by-step cooking instructions
-4. Estimated cooking time
-5. Serving size
+    // Build dietary preferences string
+    const dietaryNotes = [];
+    if (dietaryPreferences.vegan) dietaryNotes.push("vegan");
+    if (dietaryPreferences.vegetarian) dietaryNotes.push("vegetarian");
+    if (dietaryPreferences.glutenFree) dietaryNotes.push("gluten-free");
+    if (dietaryPreferences.dairyFree) dietaryNotes.push("dairy-free");
+    if (dietaryPreferences.nutFree) dietaryNotes.push("nut-free");
+    if (dietaryPreferences.shellfishFree) dietaryNotes.push("shellfish-free");
+    if (dietaryPreferences.eggFree) dietaryNotes.push("egg-free");
+    if (dietaryPreferences.soyFree) dietaryNotes.push("soy-free");
+    
+    const dietaryString = dietaryNotes.length > 0 
+      ? `\n\nIMPORTANT: This recipe must be ${dietaryNotes.join(', ')}. Do not include any ingredients that violate these dietary restrictions.`
+      : '';
+
+    const prompt = `You are a creative chef. Create a delicious recipe using these ingredients: ${ingredients}${dietaryString}
+
+Please provide the recipe in the following structured format:
+
+**Recipe Name:** [Creative recipe name]
+
+**Serving Size:** [Number] servings
+
+**Prep Time:** [Time in minutes]
+**Cook Time:** [Time in minutes]
+**Total Time:** [Total time]
+
+**Ingredients:**
+- [Ingredient 1 with measurement]
+- [Ingredient 2 with measurement]
+- [Continue list...]
+
+**Instructions:**
+1. [Step 1]
+2. [Step 2]
+3. [Continue steps...]
+
+**Tips:** [Optional cooking tips or variations]
 
 Make the recipe practical and delicious!`;
 
     const recipe = await generateContentWithRetry(prompt);
     
+    // Cache the result
+    if (recipeCache.size >= MAX_CACHE_SIZE) {
+      // Remove oldest entry
+      const firstKey = recipeCache.keys().next().value;
+      recipeCache.delete(firstKey);
+    }
+    recipeCache.set(cacheKey, {
+      recipe,
+      timestamp: Date.now()
+    });
+    
     // Track success
     usageStats.successfulRequests++;
 
-    res.json({ success: true, recipe });
+    res.json({ success: true, recipe, cached: false });
   } catch (error) {
     console.error("Error:", error);
     

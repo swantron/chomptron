@@ -317,6 +317,348 @@
         text-decoration: underline;
       }
 
+      /* Dark/Light Mode Toggle */
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: var(--accent-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 1.3em;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: transform var(--transition-speed);
+        z-index: 1000;
+        margin: 0;
+        padding: 0;
+      }
+
+      .theme-toggle:hover {
+        transform: scale(1.1);
+      }
+
+      /* Dietary Preferences */
+      .dietary-preferences {
+        margin: 20px 0;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: var(--border-radius);
+      }
+
+      .dietary-preferences h3 {
+        font-size: 1em;
+        margin-bottom: 10px;
+        color: var(--secondary-text);
+      }
+
+      .dietary-checkboxes {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        font-size: 0.9em;
+      }
+
+      .dietary-checkboxes label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 5px;
+        transition: background-color 0.2s;
+      }
+
+      .dietary-checkboxes label:hover {
+        background-color: rgba(255, 107, 26, 0.1);
+      }
+
+      .dietary-checkboxes input[type="checkbox"] {
+        margin-right: 8px;
+        cursor: pointer;
+      }
+
+      /* Recipe Header Actions */
+      .recipe-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .recipe-header-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .recipe-header-actions button {
+        width: auto;
+        padding: 8px 15px;
+        font-size: 0.9em;
+        margin: 0;
+      }
+
+      .print-btn, .share-btn {
+        background: #4caf50;
+      }
+
+      .print-btn:hover, .share-btn:hover {
+        background: #45a049;
+      }
+
+      /* Recipe Scaling */
+      .recipe-scaling {
+        margin: 15px 0;
+        padding: 10px;
+        background: #f0f0f0;
+        border-radius: var(--border-radius);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .recipe-scaling label {
+        font-weight: bold;
+        color: var(--secondary-text);
+      }
+
+      .scale-btn {
+        width: 35px;
+        height: 35px;
+        padding: 0;
+        margin: 0;
+        font-size: 1.2em;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #servingMultiplier {
+        font-weight: bold;
+        min-width: 40px;
+        text-align: center;
+      }
+
+      .serving-info {
+        color: var(--secondary-text);
+        font-size: 0.9em;
+      }
+
+      /* Recipe Rating */
+      .recipe-rating {
+        margin: 15px 0;
+        padding: 10px;
+        background: #fff3cd;
+        border-radius: var(--border-radius);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .recipe-rating label {
+        font-weight: bold;
+        color: var(--secondary-text);
+      }
+
+      .stars {
+        display: flex;
+        gap: 5px;
+      }
+
+      .star {
+        font-size: 1.5em;
+        cursor: pointer;
+        color: #ffd700;
+        transition: transform 0.2s;
+      }
+
+      .star:hover {
+        transform: scale(1.2);
+      }
+
+      .star.filled {
+        color: #ffd700;
+      }
+
+      /* Recipe Notes */
+      .recipe-notes {
+        margin: 15px 0;
+      }
+
+      .recipe-notes label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: var(--secondary-text);
+      }
+
+      .recipe-notes textarea {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius);
+        font-size: 0.9em;
+        font-family: inherit;
+        resize: vertical;
+      }
+
+      .recipe-notes textarea:focus {
+        outline: none;
+        border-color: var(--accent-color);
+      }
+
+      /* Structured Recipe Display */
+      .recipe-content-structured {
+        line-height: 1.8;
+        color: var(--secondary-text);
+      }
+
+      .recipe-content-structured .recipe-section {
+        margin: 20px 0;
+      }
+
+      .recipe-content-structured .recipe-section h3 {
+        color: var(--accent-color);
+        font-size: 1.3em;
+        margin-bottom: 10px;
+        border-bottom: 2px solid var(--accent-color);
+        padding-bottom: 5px;
+      }
+
+      .recipe-content-structured .recipe-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin: 15px 0;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: var(--border-radius);
+      }
+
+      .recipe-content-structured .recipe-meta-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .recipe-content-structured .recipe-meta-label {
+        font-weight: bold;
+        color: var(--accent-color);
+        font-size: 0.9em;
+      }
+
+      .recipe-content-structured .recipe-meta-value {
+        font-size: 1.1em;
+        color: var(--secondary-text);
+      }
+
+      .recipe-content-structured ul, .recipe-content-structured ol {
+        margin: 10px 0;
+        padding-left: 25px;
+      }
+
+      .recipe-content-structured li {
+        margin: 8px 0;
+      }
+
+      .recipe-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+
+      .recipe-actions button {
+        flex: 1;
+        min-width: 150px;
+      }
+
+      /* Print Styles */
+      @media print {
+        body {
+          background: white;
+          color: black;
+        }
+
+        .container {
+          box-shadow: none;
+          padding: 0;
+        }
+
+        .history-toggle,
+        .theme-toggle,
+        .recipe-header-actions,
+        .recipe-scaling,
+        .recipe-rating,
+        .recipe-notes,
+        .recipe-actions,
+        footer,
+        header {
+          display: none !important;
+        }
+
+        .recipe-output {
+          border: none;
+          padding: 0;
+          page-break-inside: avoid;
+        }
+
+        .recipe-content-structured {
+          font-size: 12pt;
+          line-height: 1.6;
+        }
+
+        .recipe-content-structured .recipe-section {
+          page-break-inside: avoid;
+        }
+      }
+
+      /* Dark Mode Styles */
+      body.dark-mode {
+        --primary-bg: #0a0a0a;
+        --secondary-bg: #1a1a1a;
+        --primary-text: #ffffff;
+        --secondary-text: #e0e0e0;
+        --border-color: #333333;
+      }
+
+      body.dark-mode .container {
+        background: var(--secondary-bg);
+      }
+
+      body.dark-mode .dietary-preferences {
+        background: #2a2a2a;
+      }
+
+      body.dark-mode .recipe-scaling {
+        background: #2a2a2a;
+      }
+
+      body.dark-mode .recipe-rating {
+        background: #3a2a1a;
+      }
+
+      body.dark-mode .recipe-content-structured .recipe-meta {
+        background: #2a2a2a;
+      }
+
+      body.dark-mode textarea {
+        background: #2a2a2a;
+        color: var(--secondary-text);
+        border-color: #444;
+      }
+
+      body.dark-mode footer a {
+        color: #ffffff;
+      }
+
       /* History Panel Styles */
       .history-toggle {
         position: fixed;
@@ -556,6 +898,11 @@
     </style>
   </head>
   <body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+      🌙
+    </button>
+
     <!-- History Toggle Button -->
     <button class="history-toggle" onclick="toggleHistory()" title="Recipe History">
       🍳
@@ -604,6 +951,22 @@
             placeholder="Enter your ingredients (e.g., chicken, tomatoes, garlic, pasta, olive oil)"
             rows="5"
           ></textarea>
+          
+          <!-- Dietary Preferences -->
+          <div class="dietary-preferences">
+            <h3>Dietary Preferences & Allergies (Optional)</h3>
+            <div class="dietary-checkboxes">
+              <label><input type="checkbox" id="diet-vegan" value="vegan"> 🌱 Vegan</label>
+              <label><input type="checkbox" id="diet-vegetarian" value="vegetarian"> 🥬 Vegetarian</label>
+              <label><input type="checkbox" id="diet-glutenFree" value="glutenFree"> 🌾 Gluten-Free</label>
+              <label><input type="checkbox" id="diet-dairyFree" value="dairyFree"> 🥛 Dairy-Free</label>
+              <label><input type="checkbox" id="diet-nutFree" value="nutFree"> 🥜 Nut-Free</label>
+              <label><input type="checkbox" id="diet-shellfishFree" value="shellfishFree"> 🦐 Shellfish-Free</label>
+              <label><input type="checkbox" id="diet-eggFree" value="eggFree"> 🥚 Egg-Free</label>
+              <label><input type="checkbox" id="diet-soyFree" value="soyFree"> 🫘 Soy-Free</label>
+            </div>
+          </div>
+          
           <button id="generateBtn" onclick="generateRecipe()">
             Generate Recipe ✨
           </button>
@@ -617,18 +980,57 @@
         <div id="recipeOutput" class="recipe-output hidden">
           <div class="recipe-header">
             <h2>Your Recipe</h2>
-            <button
-              id="favoriteBtn"
-              class="favorite-toggle-btn"
-              onclick="toggleFavorite()"
-              title="Add to favorites"
-            >
-              ☆ Favorite
-            </button>
+            <div class="recipe-header-actions">
+              <button
+                id="favoriteBtn"
+                class="favorite-toggle-btn"
+                onclick="toggleFavorite()"
+                title="Add to favorites"
+              >
+                ☆ Favorite
+              </button>
+              <button onclick="printRecipe()" class="print-btn" title="Print recipe">🖨️ Print</button>
+              <button onclick="shareRecipe()" class="share-btn" title="Share recipe">🔗 Share</button>
+            </div>
           </div>
-          <div id="recipeContent"></div>
-          <button onclick="copyRecipe(event)">Copy Recipe 📋</button>
-          <button onclick="clearRecipe()">Generate Another Recipe</button>
+          
+          <!-- Recipe Scaling -->
+          <div class="recipe-scaling">
+            <label>Servings: </label>
+            <button onclick="adjustServings(-1)" class="scale-btn">−</button>
+            <span id="servingMultiplier">1x</span>
+            <button onclick="adjustServings(1)" class="scale-btn">+</button>
+            <span id="servingCount" class="serving-info"></span>
+          </div>
+          
+          <!-- Recipe Rating -->
+          <div class="recipe-rating">
+            <label>Rate this recipe: </label>
+            <div class="stars">
+              <span onclick="rateRecipe(1)" class="star">☆</span>
+              <span onclick="rateRecipe(2)" class="star">☆</span>
+              <span onclick="rateRecipe(3)" class="star">☆</span>
+              <span onclick="rateRecipe(4)" class="star">☆</span>
+              <span onclick="rateRecipe(5)" class="star">☆</span>
+            </div>
+          </div>
+          
+          <!-- Recipe Notes -->
+          <div class="recipe-notes">
+            <label for="recipeNotes">Notes:</label>
+            <textarea 
+              id="recipeNotes" 
+              placeholder="Add your notes about this recipe..."
+              rows="3"
+              onchange="saveRecipeNotes()"
+            ></textarea>
+          </div>
+          
+          <div id="recipeContent" class="recipe-content-structured"></div>
+          <div class="recipe-actions">
+            <button onclick="copyRecipe(event)">Copy Recipe 📋</button>
+            <button onclick="clearRecipe()">Generate Another Recipe</button>
+          </div>
         </div>
 
         <div id="errorMessage" class="error hidden"></div>
@@ -658,10 +1060,11 @@
           return stored ? JSON.parse(stored) : [];
         },
 
-        saveRecipe(ingredients, recipe) {
+        saveRecipe(ingredients, recipe, dietaryPreferences = {}) {
           const recipes = this.getRecipes();
           const id = Date.now().toString();
           const recipeName = this.extractRecipeName(recipe);
+          const parsedRecipe = parseRecipe(recipe);
 
           const newRecipe = {
             id,
@@ -670,6 +1073,10 @@
             recipeName,
             timestamp: new Date().toISOString(),
             favorite: false,
+            rating: 0,
+            notes: "",
+            servingSize: parsedRecipe.servingSize || null,
+            dietaryPreferences: dietaryPreferences,
           };
 
           recipes.unshift(newRecipe);
@@ -682,6 +1089,15 @@
           localStorage.setItem(this.storageKey, JSON.stringify(recipes));
           this.currentRecipeId = id;
           return id;
+        },
+
+        updateRecipe(id, updates) {
+          const recipes = this.getRecipes();
+          const recipe = recipes.find((r) => r.id === id);
+          if (recipe) {
+            Object.assign(recipe, updates);
+            localStorage.setItem(this.storageKey, JSON.stringify(recipes));
+          }
         },
 
         extractRecipeName(recipe) {
@@ -765,6 +1181,228 @@
       };
 
       let historyFilter = "all"; // 'all' or 'favorites'
+      let currentServingMultiplier = 1;
+      let currentRecipeData = null;
+
+      // Theme Management
+      function initTheme() {
+        const savedTheme = localStorage.getItem("chomptron_theme") || "light";
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark-mode");
+          document.querySelector(".theme-toggle").textContent = "☀️";
+        }
+      }
+
+      function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+        const isDark = document.body.classList.contains("dark-mode");
+        document.querySelector(".theme-toggle").textContent = isDark ? "☀️" : "🌙";
+        localStorage.setItem("chomptron_theme", isDark ? "dark" : "light");
+      }
+
+      // Initialize theme on load
+      initTheme();
+
+      // Recipe Parsing
+      function parseRecipe(recipeText) {
+        const parsed = {
+          name: "",
+          servingSize: null,
+          prepTime: null,
+          cookTime: null,
+          totalTime: null,
+          ingredients: [],
+          instructions: [],
+          tips: "",
+          raw: recipeText
+        };
+
+        const lines = recipeText.split("\n").map(l => l.trim()).filter(l => l);
+        
+        let currentSection = null;
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
+          
+          // Recipe Name
+          if (line.match(/^[*]*Recipe Name[:*]/i) || (!parsed.name && i < 3 && line.length < 100)) {
+            parsed.name = line.replace(/^[*]*Recipe Name[:*]\s*/i, "").replace(/\*\*/g, "").trim();
+            if (!parsed.name && i < 3) parsed.name = line;
+            continue;
+          }
+          
+          // Serving Size
+          const servingMatch = line.match(/Serving Size[:*]\s*(\d+)/i);
+          if (servingMatch) {
+            parsed.servingSize = parseInt(servingMatch[1]);
+            continue;
+          }
+          
+          // Times
+          const prepMatch = line.match(/Prep Time[:*]\s*(\d+)/i);
+          if (prepMatch) parsed.prepTime = prepMatch[1];
+          
+          const cookMatch = line.match(/Cook Time[:*]\s*(\d+)/i);
+          if (cookMatch) parsed.cookTime = cookMatch[1];
+          
+          const totalMatch = line.match(/Total Time[:*]\s*(\d+)/i);
+          if (totalMatch) parsed.totalTime = totalMatch[1];
+          
+          // Ingredients
+          if (line.match(/^Ingredients?:/i)) {
+            currentSection = "ingredients";
+            continue;
+          }
+          
+          // Instructions
+          if (line.match(/^Instructions?:/i) || line.match(/^Steps?:/i)) {
+            currentSection = "instructions";
+            continue;
+          }
+          
+          // Tips
+          if (line.match(/^Tips?:/i)) {
+            currentSection = "tips";
+            continue;
+          }
+          
+          // Collect items
+          if (currentSection === "ingredients" && (line.startsWith("-") || line.match(/^\d+\./))) {
+            parsed.ingredients.push(line.replace(/^[-•]\s*/, "").replace(/^\d+\.\s*/, ""));
+          } else if (currentSection === "instructions" && (line.match(/^\d+\./) || line.startsWith("-"))) {
+            parsed.instructions.push(line.replace(/^\d+\.\s*/, "").replace(/^[-•]\s*/, ""));
+          } else if (currentSection === "tips") {
+            parsed.tips += line + " ";
+          }
+        }
+        
+        // Fallback: if no structured parsing worked, try to extract name from first line
+        if (!parsed.name && lines.length > 0) {
+          parsed.name = lines[0].replace(/\*\*/g, "").trim();
+        }
+        
+        return parsed;
+      }
+
+      // Recipe Scaling
+      function adjustServings(delta) {
+        currentServingMultiplier = Math.max(0.25, Math.min(4, currentServingMultiplier + delta));
+        document.getElementById("servingMultiplier").textContent = currentServingMultiplier + "x";
+        updateScaledRecipe();
+      }
+
+      function updateScaledRecipe() {
+        if (!currentRecipeData || !currentRecipeData.parsed) return;
+        
+        const parsed = currentRecipeData.parsed;
+        const multiplier = currentServingMultiplier;
+        
+        // Update serving count display
+        if (parsed.servingSize) {
+          const scaledServings = Math.round(parsed.servingSize * multiplier);
+          document.getElementById("servingCount").textContent = `(${scaledServings} servings)`;
+        }
+        
+        // Scale ingredients
+        const scaledIngredients = parsed.ingredients.map(ing => {
+          // Try to scale numbers in ingredient
+          return ing.replace(/(\d+(?:\.\d+)?)\s*(\/\d+)?/g, (match, num, frac) => {
+            const value = parseFloat(num);
+            const scaled = value * multiplier;
+            return Math.round(scaled * 100) / 100 + (frac || "");
+          });
+        });
+        
+        // Re-render recipe with scaled ingredients
+        displayRecipe(currentRecipeData.recipe, currentRecipeData.parsed, scaledIngredients);
+      }
+
+      // Recipe Rating
+      function rateRecipe(rating) {
+        if (!RecipeManager.currentRecipeId) return;
+        
+        RecipeManager.updateRecipe(RecipeManager.currentRecipeId, { rating });
+        
+        // Update star display
+        const stars = document.querySelectorAll(".recipe-rating .star");
+        stars.forEach((star, index) => {
+          if (index < rating) {
+            star.textContent = "⭐";
+            star.classList.add("filled");
+          } else {
+            star.textContent = "☆";
+            star.classList.remove("filled");
+          }
+        });
+      }
+
+      // Recipe Notes
+      function saveRecipeNotes() {
+        if (!RecipeManager.currentRecipeId) return;
+        const notes = document.getElementById("recipeNotes").value;
+        RecipeManager.updateRecipe(RecipeManager.currentRecipeId, { notes });
+      }
+
+      // Share Recipe
+      function shareRecipe() {
+        if (!currentRecipeData) return;
+        
+        const recipe = RecipeManager.getRecipes().find(r => r.id === RecipeManager.currentRecipeId);
+        if (!recipe) return;
+        
+        // Create shareable URL
+        const shareData = {
+          name: recipe.recipeName,
+          ingredients: recipe.ingredients,
+          recipe: recipe.recipe.substring(0, 500) // Limit size
+        };
+        
+        const encoded = btoa(JSON.stringify(shareData));
+        const shareUrl = `${window.location.origin}${window.location.pathname}?recipe=${encoded}`;
+        
+        // Try Web Share API, fallback to clipboard
+        if (navigator.share) {
+          navigator.share({
+            title: recipe.recipeName,
+            text: `Check out this recipe: ${recipe.recipeName}`,
+            url: shareUrl
+          }).catch(() => copyToClipboard(shareUrl));
+        } else {
+          copyToClipboard(shareUrl);
+          alert("Recipe link copied to clipboard!");
+        }
+      }
+
+      function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).catch(() => {
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textarea);
+        });
+      }
+
+      // Print Recipe
+      function printRecipe() {
+        window.print();
+      }
+
+      // Load recipe from URL
+      function loadRecipeFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const recipeParam = params.get("recipe");
+        if (recipeParam) {
+          try {
+            const recipeData = JSON.parse(atob(recipeParam));
+            document.getElementById("ingredients").value = recipeData.ingredients;
+            // Generate recipe with these ingredients
+            generateRecipe();
+          } catch (e) {
+            console.error("Failed to load recipe from URL", e);
+          }
+        }
+      }
 
       function toggleHistory() {
         const panel = document.getElementById("historyPanel");
@@ -847,9 +1485,23 @@
         if (recipe) {
           RecipeManager.currentRecipeId = id;
           document.getElementById("ingredients").value = recipe.ingredients;
-          displayRecipe(recipe.recipe);
+          
+          // Parse and display recipe
+          const parsed = parseRecipe(recipe.recipe);
+          currentRecipeData = {
+            recipe: recipe.recipe,
+            parsed: parsed
+          };
+          
+          // Reset scaling
+          currentServingMultiplier = 1;
+          document.getElementById("servingMultiplier").textContent = "1x";
+          
+          displayRecipe(recipe.recipe, parsed);
           updateFavoriteButton();
+          updateRecipeUI();
           toggleHistory();
+          
           // Scroll to recipe
           document
             .getElementById("recipeOutput")
@@ -936,6 +1588,18 @@
           return;
         }
 
+        // Get dietary preferences
+        const dietaryPreferences = {
+          vegan: document.getElementById("diet-vegan").checked,
+          vegetarian: document.getElementById("diet-vegetarian").checked,
+          glutenFree: document.getElementById("diet-glutenFree").checked,
+          dairyFree: document.getElementById("diet-dairyFree").checked,
+          nutFree: document.getElementById("diet-nutFree").checked,
+          shellfishFree: document.getElementById("diet-shellfishFree").checked,
+          eggFree: document.getElementById("diet-eggFree").checked,
+          soyFree: document.getElementById("diet-soyFree").checked,
+        };
+
         // Client-side rate limiting
         const now = Date.now();
         const timeSinceLastRequest = now - lastRequestTime;
@@ -955,16 +1619,35 @@
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ ingredients: ingredients }),
+            body: JSON.stringify({ 
+              ingredients: ingredients,
+              dietaryPreferences: dietaryPreferences
+            }),
           });
 
           const data = await response.json();
 
           if (data.success) {
+            // Parse recipe
+            const parsed = parseRecipe(data.recipe);
+            
             // Save to history
-            RecipeManager.saveRecipe(ingredients, data.recipe);
-            displayRecipe(data.recipe);
+            RecipeManager.saveRecipe(ingredients, data.recipe, dietaryPreferences);
+            
+            // Store current recipe data
+            currentRecipeData = {
+              recipe: data.recipe,
+              parsed: parsed
+            };
+            
+            // Reset scaling
+            currentServingMultiplier = 1;
+            document.getElementById("servingMultiplier").textContent = "1x";
+            
+            // Display recipe
+            displayRecipe(data.recipe, parsed);
             updateFavoriteButton();
+            updateRecipeUI();
           } else {
             // Handle quota errors with retry countdown
             if (data.quotaExceeded && data.retryAfter) {
@@ -983,17 +1666,111 @@
         }
       }
 
-      function displayRecipe(recipe) {
+      function displayRecipe(recipe, parsed = null, scaledIngredients = null) {
         const recipeContent = document.getElementById("recipeContent");
         const recipeOutput = document.getElementById("recipeOutput");
 
-        const formattedRecipe = recipe
-          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-          .replace(/\n\n/g, "</p><p>")
-          .replace(/\n/g, "<br>");
-
-        recipeContent.innerHTML = "<p>" + formattedRecipe + "</p>";
+        // If we have parsed data, display in structured format
+        if (parsed && (parsed.ingredients.length > 0 || parsed.instructions.length > 0)) {
+          const multiplier = currentServingMultiplier;
+          const ingredients = scaledIngredients || parsed.ingredients;
+          
+          let html = '';
+          
+          // Recipe Name
+          if (parsed.name) {
+            html += `<div class="recipe-section"><h3>${parsed.name}</h3></div>`;
+          }
+          
+          // Meta Information
+          if (parsed.servingSize || parsed.prepTime || parsed.cookTime || parsed.totalTime) {
+            html += '<div class="recipe-meta">';
+            if (parsed.servingSize) {
+              const servings = Math.round(parsed.servingSize * multiplier);
+              html += `<div class="recipe-meta-item"><span class="recipe-meta-label">Servings</span><span class="recipe-meta-value">${servings}</span></div>`;
+            }
+            if (parsed.prepTime) {
+              html += `<div class="recipe-meta-item"><span class="recipe-meta-label">Prep Time</span><span class="recipe-meta-value">${parsed.prepTime} min</span></div>`;
+            }
+            if (parsed.cookTime) {
+              html += `<div class="recipe-meta-item"><span class="recipe-meta-label">Cook Time</span><span class="recipe-meta-value">${parsed.cookTime} min</span></div>`;
+            }
+            if (parsed.totalTime) {
+              html += `<div class="recipe-meta-item"><span class="recipe-meta-label">Total Time</span><span class="recipe-meta-value">${parsed.totalTime} min</span></div>`;
+            }
+            html += '</div>';
+          }
+          
+          // Ingredients
+          if (ingredients.length > 0) {
+            html += '<div class="recipe-section"><h3>Ingredients</h3><ul>';
+            ingredients.forEach(ing => {
+              html += `<li>${ing.replace(/\*\*/g, "")}</li>`;
+            });
+            html += '</ul></div>';
+          }
+          
+          // Instructions
+          if (parsed.instructions.length > 0) {
+            html += '<div class="recipe-section"><h3>Instructions</h3><ol>';
+            parsed.instructions.forEach(step => {
+              html += `<li>${step.replace(/\*\*/g, "")}</li>`;
+            });
+            html += '</ol></div>';
+          }
+          
+          // Tips
+          if (parsed.tips) {
+            html += `<div class="recipe-section"><h3>Tips</h3><p>${parsed.tips.trim()}</p></div>`;
+          }
+          
+          // Fallback: if structured parsing didn't work well, show raw recipe
+          if (!parsed.name && ingredients.length === 0 && parsed.instructions.length === 0) {
+            const formattedRecipe = recipe
+              .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+              .replace(/\n\n/g, "</p><p>")
+              .replace(/\n/g, "<br>");
+            html = "<p>" + formattedRecipe + "</p>";
+          }
+          
+          recipeContent.innerHTML = html;
+        } else {
+          // Fallback to simple formatting
+          const formattedRecipe = recipe
+            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+            .replace(/\n\n/g, "</p><p>")
+            .replace(/\n/g, "<br>");
+          recipeContent.innerHTML = "<p>" + formattedRecipe + "</p>";
+        }
+        
         recipeOutput.classList.remove("hidden");
+      }
+
+      function updateRecipeUI() {
+        if (!RecipeManager.currentRecipeId) return;
+        
+        const recipe = RecipeManager.getRecipes().find(r => r.id === RecipeManager.currentRecipeId);
+        if (!recipe) return;
+        
+        // Update notes
+        document.getElementById("recipeNotes").value = recipe.notes || "";
+        
+        // Update rating
+        if (recipe.rating) {
+          rateRecipe(recipe.rating);
+        } else {
+          // Reset stars
+          document.querySelectorAll(".recipe-rating .star").forEach(star => {
+            star.textContent = "☆";
+            star.classList.remove("filled");
+          });
+        }
+        
+        // Update serving count
+        if (recipe.servingSize) {
+          const scaledServings = Math.round(recipe.servingSize * currentServingMultiplier);
+          document.getElementById("servingCount").textContent = `(${scaledServings} servings)`;
+        }
       }
 
       function showError(message) {
@@ -1024,10 +1801,32 @@
       function clearRecipe() {
         document.getElementById("recipeOutput").classList.add("hidden");
         document.getElementById("ingredients").value = "";
+        document.getElementById("recipeNotes").value = "";
         document.getElementById("ingredients").focus();
         RecipeManager.currentRecipeId = null;
+        currentRecipeData = null;
+        currentServingMultiplier = 1;
+        document.getElementById("servingMultiplier").textContent = "1x";
+        document.getElementById("servingCount").textContent = "";
+        
+        // Reset stars
+        document.querySelectorAll(".recipe-rating .star").forEach(star => {
+          star.textContent = "☆";
+          star.classList.remove("filled");
+        });
+        
+        // Reset dietary checkboxes
+        document.querySelectorAll(".dietary-checkboxes input[type='checkbox']").forEach(cb => {
+          cb.checked = false;
+        });
+        
         updateFavoriteButton();
       }
+
+      // Load recipe from URL on page load
+      window.addEventListener("DOMContentLoaded", () => {
+        loadRecipeFromURL();
+      });
 
       function copyRecipe(event) {
         const recipeContent = document.getElementById("recipeContent");
