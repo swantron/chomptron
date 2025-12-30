@@ -341,18 +341,64 @@
         transform: scale(1.1);
       }
 
-      /* Dietary Preferences */
-      .dietary-preferences {
-        margin: 20px 0;
+      /* Dietary Preferences Dropdown */
+      .dietary-dropdown {
+        margin: 15px 0;
+      }
+
+      .dietary-toggle {
+        width: 100%;
+        padding: 12px 15px;
+        background: #f8f9fa;
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius);
+        font-size: 0.95em;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all var(--transition-speed);
+        margin: 0;
+        text-align: left;
+      }
+
+      .dietary-toggle:hover {
+        background: #e9ecef;
+        border-color: var(--accent-color);
+      }
+
+      .dietary-toggle .dropdown-arrow {
+        font-size: 0.8em;
+        transition: transform var(--transition-speed);
+        color: var(--accent-color);
+      }
+
+      .dietary-toggle.open .dropdown-arrow {
+        transform: rotate(180deg);
+      }
+
+      .dietary-options {
+        margin-top: 10px;
         padding: 15px;
         background: #f8f9fa;
         border-radius: var(--border-radius);
+        border: 2px solid var(--border-color);
+        animation: slideDown 0.3s ease;
       }
 
-      .dietary-preferences h3 {
-        font-size: 1em;
-        margin-bottom: 10px;
-        color: var(--secondary-text);
+      .dietary-options.hidden {
+        display: none;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .dietary-checkboxes {
@@ -378,6 +424,12 @@
       .dietary-checkboxes input[type="checkbox"] {
         margin-right: 8px;
         cursor: pointer;
+      }
+
+      #dietaryCount {
+        font-weight: normal;
+        color: #666;
+        font-size: 0.9em;
       }
 
       /* Recipe Header Actions */
@@ -488,32 +540,6 @@
         color: #ffd700;
       }
 
-      /* Recipe Notes */
-      .recipe-notes {
-        margin: 15px 0;
-      }
-
-      .recipe-notes label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 5px;
-        color: var(--secondary-text);
-      }
-
-      .recipe-notes textarea {
-        width: 100%;
-        padding: 10px;
-        border: 2px solid var(--border-color);
-        border-radius: var(--border-radius);
-        font-size: 0.9em;
-        font-family: inherit;
-        resize: vertical;
-      }
-
-      .recipe-notes textarea:focus {
-        outline: none;
-        border-color: var(--accent-color);
-      }
 
       /* Structured Recipe Display */
       .recipe-content-structured {
@@ -597,7 +623,6 @@
         .recipe-header-actions,
         .recipe-scaling,
         .recipe-rating,
-        .recipe-notes,
         .recipe-actions,
         footer,
         header {
@@ -633,8 +658,19 @@
         background: var(--secondary-bg);
       }
 
-      body.dark-mode .dietary-preferences {
+      body.dark-mode .dietary-toggle {
         background: #2a2a2a;
+        border-color: #444;
+        color: var(--secondary-text);
+      }
+
+      body.dark-mode .dietary-toggle:hover {
+        background: #333;
+      }
+
+      body.dark-mode .dietary-options {
+        background: #2a2a2a;
+        border-color: #444;
       }
 
       body.dark-mode .recipe-scaling {
@@ -952,18 +988,23 @@
             rows="5"
           ></textarea>
           
-          <!-- Dietary Preferences -->
-          <div class="dietary-preferences">
-            <h3>Dietary Preferences & Allergies (Optional)</h3>
-            <div class="dietary-checkboxes">
-              <label><input type="checkbox" id="diet-vegan" value="vegan"> 🌱 Vegan</label>
-              <label><input type="checkbox" id="diet-vegetarian" value="vegetarian"> 🥬 Vegetarian</label>
-              <label><input type="checkbox" id="diet-glutenFree" value="glutenFree"> 🌾 Gluten-Free</label>
-              <label><input type="checkbox" id="diet-dairyFree" value="dairyFree"> 🥛 Dairy-Free</label>
-              <label><input type="checkbox" id="diet-nutFree" value="nutFree"> 🥜 Nut-Free</label>
-              <label><input type="checkbox" id="diet-shellfishFree" value="shellfishFree"> 🦐 Shellfish-Free</label>
-              <label><input type="checkbox" id="diet-eggFree" value="eggFree"> 🥚 Egg-Free</label>
-              <label><input type="checkbox" id="diet-soyFree" value="soyFree"> 🫘 Soy-Free</label>
+          <!-- Dietary Preferences Dropdown -->
+          <div class="dietary-dropdown">
+            <button type="button" class="dietary-toggle" onclick="toggleDietaryDropdown()">
+              🥗 Dietary Preferences & Allergies <span id="dietaryCount">(Optional)</span>
+              <span class="dropdown-arrow">▼</span>
+            </button>
+            <div id="dietaryOptions" class="dietary-options hidden">
+              <div class="dietary-checkboxes">
+                <label><input type="checkbox" id="diet-vegan" value="vegan" onchange="updateDietaryCount()"> 🌱 Vegan</label>
+                <label><input type="checkbox" id="diet-vegetarian" value="vegetarian" onchange="updateDietaryCount()"> 🥬 Vegetarian</label>
+                <label><input type="checkbox" id="diet-glutenFree" value="glutenFree" onchange="updateDietaryCount()"> 🌾 Gluten-Free</label>
+                <label><input type="checkbox" id="diet-dairyFree" value="dairyFree" onchange="updateDietaryCount()"> 🥛 Dairy-Free</label>
+                <label><input type="checkbox" id="diet-nutFree" value="nutFree" onchange="updateDietaryCount()"> 🥜 Nut-Free</label>
+                <label><input type="checkbox" id="diet-shellfishFree" value="shellfishFree" onchange="updateDietaryCount()"> 🦐 Shellfish-Free</label>
+                <label><input type="checkbox" id="diet-eggFree" value="eggFree" onchange="updateDietaryCount()"> 🥚 Egg-Free</label>
+                <label><input type="checkbox" id="diet-soyFree" value="soyFree" onchange="updateDietaryCount()"> 🫘 Soy-Free</label>
+              </div>
             </div>
           </div>
           
@@ -1015,17 +1056,6 @@
             </div>
           </div>
           
-          <!-- Recipe Notes -->
-          <div class="recipe-notes">
-            <label for="recipeNotes">Notes:</label>
-            <textarea 
-              id="recipeNotes" 
-              placeholder="Add your notes about this recipe..."
-              rows="3"
-              onchange="saveRecipeNotes()"
-            ></textarea>
-          </div>
-          
           <div id="recipeContent" class="recipe-content-structured"></div>
           <div class="recipe-actions">
             <button onclick="copyRecipe(event)">Copy Recipe 📋</button>
@@ -1074,7 +1104,6 @@
             timestamp: new Date().toISOString(),
             favorite: false,
             rating: 0,
-            notes: "",
             servingSize: parsedRecipe.servingSize || null,
             dietaryPreferences: dietaryPreferences,
           };
@@ -1335,11 +1364,23 @@
         });
       }
 
-      // Recipe Notes
-      function saveRecipeNotes() {
-        if (!RecipeManager.currentRecipeId) return;
-        const notes = document.getElementById("recipeNotes").value;
-        RecipeManager.updateRecipe(RecipeManager.currentRecipeId, { notes });
+      // Dietary Preferences Dropdown
+      function toggleDietaryDropdown() {
+        const options = document.getElementById("dietaryOptions");
+        const toggle = document.querySelector(".dietary-toggle");
+        options.classList.toggle("hidden");
+        toggle.classList.toggle("open");
+      }
+
+      function updateDietaryCount() {
+        const checkboxes = document.querySelectorAll(".dietary-checkboxes input[type='checkbox']");
+        const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+        const countEl = document.getElementById("dietaryCount");
+        if (checked > 0) {
+          countEl.textContent = `(${checked} selected)`;
+        } else {
+          countEl.textContent = "(Optional)";
+        }
       }
 
       // Share Recipe
@@ -1752,9 +1793,6 @@
         const recipe = RecipeManager.getRecipes().find(r => r.id === RecipeManager.currentRecipeId);
         if (!recipe) return;
         
-        // Update notes
-        document.getElementById("recipeNotes").value = recipe.notes || "";
-        
         // Update rating
         if (recipe.rating) {
           rateRecipe(recipe.rating);
@@ -1801,7 +1839,6 @@
       function clearRecipe() {
         document.getElementById("recipeOutput").classList.add("hidden");
         document.getElementById("ingredients").value = "";
-        document.getElementById("recipeNotes").value = "";
         document.getElementById("ingredients").focus();
         RecipeManager.currentRecipeId = null;
         currentRecipeData = null;
@@ -1819,6 +1856,15 @@
         document.querySelectorAll(".dietary-checkboxes input[type='checkbox']").forEach(cb => {
           cb.checked = false;
         });
+        updateDietaryCount();
+        
+        // Close dietary dropdown if open
+        const options = document.getElementById("dietaryOptions");
+        const toggle = document.querySelector(".dietary-toggle");
+        if (!options.classList.contains("hidden")) {
+          options.classList.add("hidden");
+          toggle.classList.remove("open");
+        }
         
         updateFavoriteButton();
       }
