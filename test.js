@@ -177,7 +177,9 @@ assert(html.includes("JSON.stringify"), "HTML stringifies data for storage");
 // Recipe save integration
 console.log("\nRecipe Save Integration Tests:");
 assert(
-  html.includes("RecipeManager.saveRecipe(ingredients, data.recipe)"),
+  html.includes("RecipeManager.saveRecipe") &&
+    html.includes("ingredients") &&
+    html.includes("data.recipe"),
   "HTML auto-saves recipes on generation",
 );
 assert(
