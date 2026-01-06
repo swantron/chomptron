@@ -1435,6 +1435,16 @@
       // Load recipe from URL
       function loadRecipeFromURL() {
         const params = new URLSearchParams(window.location.search);
+        
+        // Check for simple ingredients parameter (from tronswan widget)
+        const ingredientsParam = params.get("ingredients");
+        if (ingredientsParam) {
+          document.getElementById("ingredients").value = ingredientsParam;
+          document.getElementById("ingredients").focus();
+          return;
+        }
+        
+        // Check for full recipe parameter (from share link)
         const recipeParam = params.get("recipe");
         if (recipeParam) {
           try {
