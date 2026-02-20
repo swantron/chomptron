@@ -1,25 +1,24 @@
 :root {
-    --primary-bg: #0f172a;
-    /* Deeper slate for better glass contrast */
-    --secondary-bg: rgba(255, 255, 255, 0.7);
-    --primary-text: #ffffff;
-    --secondary-text: #1e293b;
+    --primary-bg: #ffffff;
+    /* Super Light Mode */
+    --secondary-bg: rgba(255, 255, 255, 0.85);
+    --primary-text: #0f172a;
+    --secondary-text: #334155;
     --accent-color: #f97316;
-    /* Vibrant orange */
     --error-color: #ef4444;
     --success-color: #22c55e;
     --border-radius: 16px;
-    /* Slightly rounder for modern feel */
     --transition-speed: 0.4s;
     --max-width: 1000px;
     --container-padding: 24px;
-    --border-color: rgba(255, 255, 255, 0.2);
+    --border-color: rgba(15, 23, 42, 0.08);
+    /* Sophisticated subtle border */
 
-    /* Glassmorphism Tokens - Ultra-transparent to restore background robot visibility */
-    --glass-bg: rgba(255, 255, 255, 0.15);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
-    --glass-blur: blur(6px);
+    /* Glassmorphism Tokens - Optimized for Super Light Mode */
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(15, 23, 42, 0.06);
+    --glass-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04);
+    --glass-blur: blur(12px);
 
     --font-main: 'Inter', system-ui, -apple-system, sans-serif;
     --font-title: 'Outfit', sans-serif;
@@ -33,7 +32,7 @@
 
 body {
     font-family: var(--font-main);
-    background: radial-gradient(circle at top left, #1e293b, #0f172a);
+    background: var(--primary-bg);
     background-attachment: fixed;
     min-height: 100vh;
     padding: var(--container-padding);
@@ -643,14 +642,13 @@ footer a:hover {
 /* Dark Mode Styles */
 body.dark-mode {
     --primary-bg: #020617;
-    /* Deepest blue-black */
-    --secondary-bg: rgba(15, 23, 42, 0.2);
+    --secondary-bg: rgba(15, 23, 42, 0.3);
     --primary-text: #f8fafc;
     --secondary-text: #f1f5f9;
     --border-color: rgba(255, 255, 255, 0.1);
-    --glass-bg: rgba(15, 23, 42, 0.2);
-    /* Ultra-transparent dark mode */
+    --glass-bg: rgba(15, 23, 42, 0.3);
     --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 
 body.dark-mode {
