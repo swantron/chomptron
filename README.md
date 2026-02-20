@@ -68,12 +68,10 @@ npm test
 
 Tests validate:
 
-- File structure and dependencies
-- Docker and Cloud Build configurations
-- Health check endpoints (`/health`, `/ready`)
-- Recipe generation API
-- Frontend functionality
-- Recipe history and favorites features (40+ static tests)
+- **Modular File Structure**: Verification of external `styles.css` and `app.js` linking
+- **CI/CD & DevOps**: Docker and Cloud Build configurations
+- **API Integrity**: Health check endpoints (`/health`, `/ready`) and recipe generation
+- **Feature Robustness**: Recipe history, scaling logic, and favorites (70+ comprehensive tests)
 
 ### Browser-Based History Tests
 
@@ -130,9 +128,9 @@ Chomptron is built as a **serverless application** on Google Cloud Run for cost 
 
 **Tech Stack:**
 
-- **Backend:** Node.js 20 + Express
+- **Backend:** Node.js 22 + Express
 - **AI:** Google Gemini (configurable model, defaults to gemini-2.5-flash-lite)
-- **Frontend:** Vanilla HTML/CSS/JavaScript (no frameworks)
+- **Frontend:** Modular Vanilla HTML/CSS/JavaScript (Clean separation of concerns)
 - **Storage:** Browser localStorage for recipe history
 - **Platform:** Google Cloud Run (serverless)
 - **CI/CD:** Cloud Build
@@ -220,7 +218,8 @@ gcloud run logs tail chomptron --region us-central1
 - 🍳 Creative recipe names and instructions
 - 📏 Precise measurements and serving sizes
 - ⏱️ Cooking time estimates (prep, cook, total time)
-- 🎨 Clean, responsive UI with dark/light mode toggle
+- 🎨 **Modern Visual Polish**: Glassmorphism design with staggered entrance animations
+- 🔠 **Premium Typography**: Outfit and Inter fonts for a contemporary feel
 - ⚡ Serverless, auto-scaling infrastructure on Google Cloud Run
 
 ### Recipe Management
