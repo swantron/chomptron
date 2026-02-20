@@ -716,7 +716,19 @@ function displayRecipe(recipe, parsed = null, scaledIngredients = null) {
         recipeContent.innerHTML = "<p>" + formattedRecipe + "</p>";
     }
 
-    recipeOutput.classList.remove("hidden");
+    recipeOutput.classList.add("hidden");
+
+    // Use setTimeout to ensure the browser registers the removal/addition for animation re-trigger
+    setTimeout(() => {
+        recipeOutput.classList.remove("hidden");
+
+        // Stagger children entrance
+        const children = recipeContent.children;
+        for (let i = 0; i < children.length; i++) {
+            children[i].style.animationDelay = `${i * 0.1}s`;
+            children[i].classList.add("slide-up-item");
+        }
+    }, 10);
 }
 
 function updateRecipeUI() {
