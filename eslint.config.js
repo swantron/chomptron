@@ -1,27 +1,30 @@
+const globals = require("globals");
+
 module.exports = [
   {
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "commonjs",
       globals: {
-        console: "readonly",
-        process: "readonly",
-        require: "readonly",
-        module: "readonly",
-        exports: "readonly",
-        __dirname: "readonly",
-        __filename: "readonly",
-        Buffer: "readonly",
-        setTimeout: "readonly",
-        setInterval: "readonly",
-        clearTimeout: "readonly",
-        clearInterval: "readonly",
+        ...globals.node,
+        ...globals.commonjs,
       },
     },
     rules: {
       "no-unused-vars": "warn",
       "no-undef": "error",
       "no-console": "off",
+    },
+  },
+  {
+    files: ["app.js"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
+    },
+    rules: {
+      "no-unused-vars": "off", // Functions called from HTML are detected as unused
     },
   },
   {
