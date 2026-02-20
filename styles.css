@@ -15,11 +15,11 @@
     --container-padding: 24px;
     --border-color: rgba(255, 255, 255, 0.2);
 
-    /* Glassmorphism Tokens */
-    --glass-bg: rgba(255, 255, 255, 0.7);
+    /* Glassmorphism Tokens - Ultra-transparent to restore background robot visibility */
+    --glass-bg: rgba(255, 255, 255, 0.15);
     --glass-border: rgba(255, 255, 255, 0.3);
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-    --glass-blur: blur(12px);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+    --glass-blur: blur(6px);
 
     --font-main: 'Inter', system-ui, -apple-system, sans-serif;
     --font-title: 'Outfit', sans-serif;
@@ -84,7 +84,7 @@ header {
 
 .logo {
     position: fixed;
-    top: -50px;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
     max-width: 140%;
@@ -93,9 +93,10 @@ header {
     height: auto;
     z-index: -1;
     pointer-events: none;
-    opacity: 0.05;
-    filter: blur(10px);
-    /* Soften for background */
+    opacity: 0.3;
+    /* Boosted for significant prominence */
+    filter: none;
+    /* Removed blur to keep logo crisp */
     transition: opacity var(--transition-speed);
 }
 
@@ -233,9 +234,9 @@ button:disabled {
 }
 
 .recipe-output {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     padding: 30px;
     border-radius: var(--border-radius);
     margin-top: 30px;
@@ -643,11 +644,12 @@ footer a:hover {
 body.dark-mode {
     --primary-bg: #020617;
     /* Deepest blue-black */
-    --secondary-bg: rgba(15, 23, 42, 0.7);
+    --secondary-bg: rgba(15, 23, 42, 0.2);
     --primary-text: #f8fafc;
     --secondary-text: #f1f5f9;
     --border-color: rgba(255, 255, 255, 0.1);
-    --glass-bg: rgba(15, 23, 42, 0.8);
+    --glass-bg: rgba(15, 23, 42, 0.2);
+    /* Ultra-transparent dark mode */
     --glass-border: rgba(255, 255, 255, 0.1);
 }
 
