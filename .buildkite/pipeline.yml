@@ -59,17 +59,19 @@ steps:
   - label: ":buildkite: Annotate"
     key: annotate
     command: |
-      FORMAT_RESULT="${{ steps.format.passed }}"
+      # Check each step's outcome via the agent API
+      FORMAT=$$(buildkite-agent step get "outcome" --step "format" 2>/dev/null || echo "unknown")
+      LINT=$$(buildkite-agent step get "outcome" --step "lint" 2>/dev/null || echo "unknown")
+      TEST=$$(buildkite-agent step get "outcome" --step "test" 2>/dev/null || echo "unknown")
 
-      # Determine overall result from step outcomes
-      if buildkite-agent step get "outcome" --step "format" 2>/dev/null | grep -q "passed" && \
-         buildkite-agent step get "outcome" --step "lint"   2>/dev/null | grep -q "passed" && \
-         buildkite-agent step get "outcome" --step "test"   2>/dev/null | grep -q "passed"; then
+      echo "format=$${FORMAT} lint=$${LINT} test=$${TEST}"
+
+      if [ "$$FORMAT" = "passed" ] && [ "$$LINT" = "passed" ] && [ "$$TEST" = "passed" ]; then
         buildkite-agent annotate \
           "**chomptron CI passed** — format, lint, and tests all green :white_check_mark:" \
           --style "success" --context "ci-summary"
       else
         buildkite-agent annotate \
-          "**chomptron CI failed** — check individual steps above :x:" \
+          "**chomptron CI failed** — format=$$FORMAT lint=$$LINT test=$$TEST :x:" \
           --style "error" --context "ci-summary"
       fi
