@@ -1,0 +1,75 @@
+# Buildkite pipeline for chomptron
+#
+# This pipeline runs on the self-hosted GCP agent provisioned by
+# github.com/swantron/buildkite-gcp-agent.
+#
+# Pipeline structure:
+#   Stage 1 — format, lint, and test run in parallel (no interdependencies)
+#   Stage 2 — annotate surfaces a consolidated result in the Buildkite UI
+#
+# The key difference from the equivalent GitHub Actions workflow:
+# The GHA workflow runs format → lint → test sequentially in a single job.
+# Here they are independent steps dispatched simultaneously to the agent.
+# On a pool of agents this distributes the work; even on a single agent
+# the explicit dependency graph documents intent and makes the pipeline
+# trivially scalable.
+#
+# The deploy stage is intentionally omitted — Cloud Run deployments are
+# handled by the existing GHA workflow which holds the production GCP
+# credentials. CI (fast feedback) and CD (production access) are kept
+# in separate systems as a security boundary.
+
+agents:
+  queue: gcp
+
+steps:
+
+  # ============================================================
+  # Stage 1: CI — format, lint, test run in parallel
+  # ============================================================
+
+  - label: ":prettier: Format"
+    key: format
+    command: |
+      which node || { echo "node not found"; exit 1; }
+      npm ci --prefer-offline
+      npm run format -- --check
+
+  - label: ":eslint: Lint"
+    key: lint
+    command: |
+      npm ci --prefer-offline
+      npm run lint
+
+  - label: ":nodejs: Test"
+    key: test
+    command: |
+      npm ci --prefer-offline
+      npm test
+      echo "--- Tests passed"
+
+  # ============================================================
+  # Stage 2: Annotate — waits for all three, reports consolidated result
+  # Runs even if a step failed so the annotation always appears
+  # ============================================================
+
+  - wait: ~
+    continue_on_failure: true
+
+  - label: ":buildkite: Annotate"
+    key: annotate
+    command: |
+      FORMAT_RESULT="${{ steps.format.passed }}"
+
+      # Determine overall result from step outcomes
+      if buildkite-agent step get "outcome" --step "format" 2>/dev/null | grep -q "passed" && \
+         buildkite-agent step get "outcome" --step "lint"   2>/dev/null | grep -q "passed" && \
+         buildkite-agent step get "outcome" --step "test"   2>/dev/null | grep -q "passed"; then
+        buildkite-agent annotate \
+          "**chomptron CI passed** — format, lint, and tests all green :white_check_mark:" \
+          --style "success" --context "ci-summary"
+      else
+        buildkite-agent annotate \
+          "**chomptron CI failed** — check individual steps above :x:" \
+          --style "error" --context "ci-summary"
+      fi
