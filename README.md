@@ -299,6 +299,34 @@ The application uses in-memory caching on the server side:
 
 Optimized for search engines and social sharing with meta tags, Open Graph, Twitter Cards, structured data (JSON-LD), sitemap, robots.txt, and PWA support.
 
+## Buildkite Pipeline
+
+This repo includes a Buildkite pipeline at `.buildkite/pipeline.yml` that runs on a self-hosted GCP agent provisioned by [buildkite-gcp-agent](https://github.com/swantron/buildkite-gcp-agent).
+
+### Pipeline structure
+
+```
+Push / PR
+  └── Three steps dispatched in parallel:
+        ├── :prettier: Format check   (npm run format -- --check)
+        ├── :eslint:   Lint           (npm run lint)
+        └── :nodejs:   Tests          (npm test)
+  └── Annotate — consolidated pass/fail surfaced in the Buildkite UI
+```
+
+The key difference from the GitHub Actions workflow, which runs format → lint → test sequentially in a single job: these three steps have no dependencies on each other and run simultaneously. On a pool of agents this distributes the work; even on a single agent the explicit dependency graph documents intent and makes the pipeline trivially scalable.
+
+The deploy stage is intentionally omitted — Cloud Run deployments are handled by the existing GHA workflow which holds the production GCP credentials. CI (fast feedback) and CD (production access) are kept in separate systems as a security boundary.
+
+### Agent targeting
+
+All steps run on the `gcp` queue:
+
+```yaml
+agents:
+  queue: gcp
+```
+
 ## Contributing
 
 This is a personal project, but suggestions and improvements are welcome!
