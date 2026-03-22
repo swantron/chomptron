@@ -318,6 +318,10 @@ The key difference from the GitHub Actions workflow, which runs format → lint 
 
 The deploy stage is intentionally omitted — Cloud Run deployments are handled by the existing GHA workflow which holds the production GCP credentials. CI (fast feedback) and CD (production access) are kept in separate systems as a security boundary.
 
+### Pipeline setup
+
+Connect the repo via Buildkite → New Pipeline → point at `github.com/swantron/chomptron`. Buildkite reads `.buildkite/pipeline.yml` automatically on each push.
+
 ### Agent targeting
 
 All steps run on the `gcp` queue:
