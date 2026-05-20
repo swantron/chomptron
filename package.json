@@ -10,14 +10,14 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@google/generative-ai": "^0.21.0",
+    "@google/generative-ai": "^0.24.1",
     "express": "^5.0.0"
   },
   "engines": {
     "node": ">=24.0.0"
   },
   "devDependencies": {
-    "eslint": "^9.39.1",
-    "prettier": "^3.6.2"
+    "eslint": "^10.4.0",
+    "prettier": "^3.8.3"
   }
 }
