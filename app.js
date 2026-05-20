@@ -232,7 +232,7 @@ function parseRecipe(recipeText) {
 
 // Recipe Scaling
 function adjustServings(delta) {
-    currentServingMultiplier = Math.max(0.25, Math.min(4, currentServingMultiplier + delta));
+    currentServingMultiplier = Math.max(0.5, Math.min(4, currentServingMultiplier + delta));
     document.getElementById("servingMultiplier").textContent = currentServingMultiplier + "x";
     updateScaledRecipe();
 }
@@ -310,7 +310,7 @@ function shareRecipe() {
         recipe: recipe.recipe.substring(0, 500) // Limit size
     };
 
-    const encoded = btoa(JSON.stringify(shareData));
+    const encoded = btoa(encodeURIComponent(JSON.stringify(shareData)));
     const shareUrl = `${window.location.origin}${window.location.pathname}?recipe=${encoded}`;
 
     // Try Web Share API, fallback to clipboard
@@ -365,7 +365,7 @@ function loadRecipeFromURL() {
     const recipeParam = params.get("recipe");
     if (recipeParam) {
         try {
-            const recipeData = JSON.parse(atob(recipeParam));
+            const recipeData = JSON.parse(decodeURIComponent(atob(recipeParam)));
             document.getElementById("ingredients").value = recipeData.ingredients;
             // Generate recipe with these ingredients
             generateRecipe();
