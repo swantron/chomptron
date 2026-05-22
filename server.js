@@ -5,16 +5,15 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 // Initialize Gemini
-// Model options (as of December 2025):
-// - gemini-2.5-flash-lite (RECOMMENDED - best free tier: 15 RPM, 1000 RPD)
-// - gemini-2.5-flash (10 RPM, 250 RPD)
-// - gemini-2.0-flash (10 RPM, 200 RPD - unstable quota, often shows limit: 0)
-// - gemini-1.5-flash (legacy, may have better limits than 2.0)
-// 
-// Note: December 2025 quota shift removed gemini-2.0-flash from fully free tier.
+// Model options (as of May 2026):
+// - gemini-3.1-flash-lite (RECOMMENDED - stable, budget-friendly free tier)
+// - gemini-3.5-flash (stable, highest capability in flash family)
+// - gemini-2.5-flash-lite (previous gen, still available)
+// - gemini-2.5-flash (previous gen, still available)
+//
 // If you see "limit: 0" errors, try enabling billing (pay-as-you-go) even if you
 // stay within free usage - this unlocks Tier 1 quotas.
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.1-flash-lite";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
 
@@ -273,11 +272,11 @@ Make the recipe practical and delicious!`;
       // Provide helpful guidance based on the error
       if (error.message && error.message.includes("limit: 0")) {
         errorMessage += "⚠️ Seeing 'limit: 0'? This often means the model was removed from fully free tier. ";
-        errorMessage += "Try switching to gemini-2.5-flash-lite or enable billing (pay-as-you-go) to unlock Tier 1 quotas. ";
+        errorMessage += "Try switching to gemini-3.1-flash-lite or enable billing (pay-as-you-go) to unlock Tier 1 quotas. ";
       } else {
         errorMessage += "The free tier has daily and per-minute limits. ";
-        if (GEMINI_MODEL !== "gemini-2.5-flash-lite") {
-          errorMessage += "Consider switching to gemini-2.5-flash-lite for better free tier limits (15 RPM, 1000 RPD). ";
+        if (GEMINI_MODEL !== "gemini-3.1-flash-lite") {
+          errorMessage += "Consider switching to gemini-3.1-flash-lite for better free tier limits. ";
         }
         errorMessage += "You can also enable billing to access higher limits. ";
       }
