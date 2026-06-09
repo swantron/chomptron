@@ -1,5 +1,7 @@
 # Chomptron
 
+[![watchtron](https://img.shields.io/endpoint?url=https%3A%2F%2Fwatch.swantron.com%2Fbadge%2Fchomptron)](https://watch.swantron.com/)
+
 AI-powered recipe generator that transforms ingredients into delicious recipes using Google Gemini AI. Deployed on Google Cloud Run at chomptron.com.
 
 ## What It Does
