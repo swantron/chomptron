@@ -1,5 +1,5 @@
-# Use official Node.js runtime as base image
-FROM node:20-slim
+# Use official Node.js runtime as base image (matches package.json engines >=24)
+FROM node:24-slim
 
 # Set working directory
 WORKDIR /app
