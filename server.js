@@ -1,7 +1,13 @@
+// watchtron white-box tracing. Must be required before express/http so the
+// OpenTelemetry instrumentation can patch them. No-op unless WATCHTRON_OTLP_ENDPOINT is set.
+require("@swantron/otel-bootstrap/register");
 const express = require("express");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { syntheticMarkerMiddleware } = require("@swantron/otel-bootstrap");
 
 const app = express();
+// Stamp synthetic run ids from watchtron probes onto the server span.
+app.use(syntheticMarkerMiddleware());
 const port = process.env.PORT || 8080;
 
 // Initialize Gemini
