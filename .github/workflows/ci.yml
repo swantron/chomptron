@@ -48,5 +48,11 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
 
+      # Build + push a fresh image from this commit. Without this, deploy.sh only
+      # ships the pre-existing :latest tag (the Cloud Build trigger isn't wired),
+      # so code changes never reached production.
+      - name: Build and push image
+        run: gcloud builds submit --config cloudbuild.yaml --substitutions SHORT_SHA=${GITHUB_SHA::7} .
+
       - name: Deploy to Cloud Run
         run: ./deploy.sh
