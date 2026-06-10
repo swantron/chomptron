@@ -58,16 +58,14 @@ jobs:
         run: ./deploy.sh
 
   # Post-deploy gate: drive synthetic traffic at the live URL and fail if the
-  # white-box telemetry didn't land in the watchtron control plane. Generous
-  # requests/wait absorb Cloud Run's between-request CPU throttling (which can
-  # delay OTel batch export after the prober goes idle).
+  # white-box telemetry didn't land in the watchtron control plane. The generous
+  # requests/wait that absorb Cloud Run's between-request CPU throttling now live
+  # in watchtron's registry (services.yaml -> chomptron.probe), not here.
   verify:
     needs: deploy
     uses: swantron/watchtron/.github/workflows/verify.yml@main
     with:
       service: chomptron
-      requests: 10
-      wait: 25000
     secrets:
       otlp_endpoint: ${{ secrets.WATCHTRON_OTLP_ENDPOINT }}
       token: ${{ secrets.WATCHTRON_TOKEN }}
