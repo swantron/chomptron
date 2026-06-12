@@ -66,6 +66,7 @@ jobs:
     uses: swantron/watchtron/.github/workflows/verify.yml@main
     with:
       service: chomptron
+      version: ${{ github.sha }}
     secrets:
       otlp_endpoint: ${{ secrets.WATCHTRON_OTLP_ENDPOINT }}
       token: ${{ secrets.WATCHTRON_TOKEN }}

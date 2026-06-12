@@ -15,6 +15,10 @@ echo "Deploying chomptron to Cloud Run..."
 # Rotate later with:
 #   printf '%s' "<NEW_TOKEN>" | gcloud secrets versions add watchtron-token --data-file=-
 # WATCHTRON_SERVICE_NAME must match the registry's expectedServiceName (chomptron-web).
+# WATCHTRON_SERVICE_VERSION is the deployed git SHA, stamped as service.version so
+# watchtron's verify can prove THIS build is actually serving (not a stale revision).
+# Falls back to "dev" when run outside CI (GITHUB_SHA unset).
+VERSION="${GITHUB_SHA:-dev}"
 
 gcloud run deploy chomptron \
   --image us-central1-docker.pkg.dev/chomptron/chomptron-repo/chomptron:latest \
@@ -23,7 +27,7 @@ gcloud run deploy chomptron \
   --allow-unauthenticated \
   --service-account 774854504205-compute@developer.gserviceaccount.com \
   --update-secrets GEMINI_API_KEY=gemini-api-key:latest,WATCHTRON_TOKEN=watchtron-token:latest \
-  --update-env-vars WATCHTRON_OTLP_ENDPOINT=https://watch.swantron.com,WATCHTRON_SERVICE_NAME=chomptron-web \
+  --update-env-vars WATCHTRON_OTLP_ENDPOINT=https://watch.swantron.com,WATCHTRON_SERVICE_NAME=chomptron-web,WATCHTRON_SERVICE_VERSION="${VERSION}" \
   --quiet
 
 echo "✓ Deployment complete!"
