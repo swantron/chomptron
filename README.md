@@ -130,7 +130,7 @@ Chomptron is built as a **serverless application** on Google Cloud Run for cost 
 
 **Tech Stack:**
 
-- **Backend:** Node.js 22 + Express
+- **Backend:** Node.js 24 + Express
 - **AI:** Google Gemini (configurable model, defaults to gemini-2.5-flash-lite)
 - **Frontend:** Modular Vanilla HTML/CSS/JavaScript (Clean separation of concerns)
 - **Storage:** Browser localStorage for recipe history
