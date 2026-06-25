@@ -87,7 +87,7 @@
 
   <!-- History Toggle Button -->
   <button class="history-toggle" onclick="toggleHistory()" title="Recipe History">
-    🍳
+    📋
   </button>
 
   <!-- History Backdrop -->
@@ -107,8 +107,11 @@
         <button onclick="showAllHistory()">📋 All</button>
       </div>
       <div class="history-buttons" style="margin-top: 10px;">
-        <button onclick="exportRecipes()">💾 Export</button>
-        <button onclick="clearHistory()">🗑️ Clear</button>
+        <button onclick="exportJSON()">💾 Export JSON</button>
+        <button onclick="exportText()">📄 Export Text</button>
+      </div>
+      <div class="history-buttons" style="margin-top: 10px;">
+        <button onclick="clearHistory()">🗑️ Clear All</button>
       </div>
     </div>
     <div id="historyList"></div>
@@ -128,6 +131,7 @@
         <h2>What's in Your Kitchen?</h2>
         <textarea id="ingredients"
           placeholder="Enter your ingredients (e.g., chicken, tomatoes, garlic, pasta, olive oil)" rows="5"></textarea>
+        <p class="textarea-hint">Press Enter to generate</p>
 
         <!-- Dietary Preferences Dropdown -->
         <div class="dietary-dropdown">
@@ -203,7 +207,7 @@
         <div id="recipeContent" class="recipe-content-structured"></div>
         <div class="recipe-actions">
           <button onclick="copyRecipe(event)">Copy Recipe 📋</button>
-          <button onclick="clearRecipe()">Generate Another Recipe</button>
+          <button onclick="clearRecipe()">Start Over</button>
         </div>
       </div>
 

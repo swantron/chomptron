@@ -378,8 +378,10 @@ function loadRecipeFromURL() {
 function toggleHistory() {
     const panel = document.getElementById("historyPanel");
     const backdrop = document.getElementById("historyBackdrop");
+    const toggleBtn = document.querySelector(".history-toggle");
     panel.classList.toggle("open");
     backdrop.classList.toggle("show");
+    toggleBtn.classList.toggle("panel-open", panel.classList.contains("open"));
     if (panel.classList.contains("open")) {
         renderHistory();
     }
@@ -520,22 +522,20 @@ function updateFavoriteButton() {
     }
 }
 
-function exportRecipes() {
-    const recipes = RecipeManager.getRecipes();
-    if (recipes.length === 0) {
-        alert("No recipes to export!");
+function exportJSON() {
+    if (RecipeManager.getRecipes().length === 0) {
+        showToast("No recipes to export!");
         return;
     }
+    RecipeManager.exportToJSON();
+}
 
-    if (
-        confirm(
-            "Export as JSON (for backup) or Text (for reading)?\n\nOK = JSON, Cancel = Text",
-        )
-    ) {
-        RecipeManager.exportToJSON();
-    } else {
-        RecipeManager.exportToText();
+function exportText() {
+    if (RecipeManager.getRecipes().length === 0) {
+        showToast("No recipes to export!");
+        return;
     }
+    RecipeManager.exportToText();
 }
 
 function clearHistory() {
@@ -767,7 +767,7 @@ function showQuotaError(message, retryAfter) {
 
     const updateMessage = () => {
         if (secondsLeft > 0) {
-            errorMessage.textContent = `${message} Retrying automatically in ${secondsLeft} seconds...`;
+            errorMessage.textContent = `${message} You can try again in ${secondsLeft} second${secondsLeft !== 1 ? 's' : ''}.`;
             errorMessage.classList.remove("hidden");
             secondsLeft--;
             setTimeout(updateMessage, 1000);
