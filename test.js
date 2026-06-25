@@ -175,8 +175,8 @@ assert(
   "App has toggleHistory function",
 );
 assert(
-  html.includes("exportRecipes") || js.includes("exportRecipes"),
-  "App has exportRecipes function",
+  html.includes("exportJSON") || js.includes("exportJSON"),
+  "App has exportJSON function",
 );
 assert(
   html.includes("clearHistory") || js.includes("clearHistory"),
