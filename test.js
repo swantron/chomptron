@@ -38,6 +38,11 @@ assert(
   "package description mentions recipes",
 );
 
+// difftron delta-coverage demo: exercises covered() but not uncovered().
+console.log("\nDifftron Demo Tests:");
+const difftronDemo = require("./difftronDemo.js");
+assert(difftronDemo.covered(2, 3) === 5, "difftronDemo.covered works");
+
 // Dockerfile validation
 console.log("\nDocker Configuration Tests:");
 const dockerfile = fs.readFileSync("./Dockerfile", "utf8");
