@@ -4,6 +4,9 @@ require("@swantron/otel-bootstrap/register");
 const express = require("express");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { syntheticMarkerMiddleware } = require("@swantron/otel-bootstrap");
+const { McpServer } = require("@modelcontextprotocol/server");
+const { NodeStreamableHTTPServerTransport } = require("@modelcontextprotocol/node");
+const { z } = require("zod");
 
 const app = express();
 // Stamp synthetic run ids from watchtron probes onto the server span.
@@ -174,49 +177,32 @@ const generateContentWithRetry = async (prompt, maxRetries = 3) => {
   throw lastError;
 };
 
-app.post("/api/generate-recipe", async (req, res) => {
-  try {
-    const { ingredients, dietaryPreferences = {} } = req.body;
+// Shared by both the REST route and the MCP tool: cache lookup, prompt
+// build, Gemini call with retry, cache write. Callers own their own
+// usage tracking and error presentation.
+async function generateRecipe(ingredients, dietaryPreferences = {}) {
+  const cacheKey = createCacheKey(ingredients, dietaryPreferences);
+  const cached = recipeCache.get(cacheKey);
+  if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+    console.log(`Cache hit for: ${ingredients.substring(0, 50)}...`);
+    return { recipe: cached.recipe, cached: true };
+  }
 
-    if (!ingredients) {
-      return res
-        .status(400)
-        .json({ success: false, error: "No ingredients provided" });
-    }
+  const dietaryNotes = [];
+  if (dietaryPreferences.vegan) dietaryNotes.push("vegan");
+  if (dietaryPreferences.vegetarian) dietaryNotes.push("vegetarian");
+  if (dietaryPreferences.glutenFree) dietaryNotes.push("gluten-free");
+  if (dietaryPreferences.dairyFree) dietaryNotes.push("dairy-free");
+  if (dietaryPreferences.nutFree) dietaryNotes.push("nut-free");
+  if (dietaryPreferences.shellfishFree) dietaryNotes.push("shellfish-free");
+  if (dietaryPreferences.eggFree) dietaryNotes.push("egg-free");
+  if (dietaryPreferences.soyFree) dietaryNotes.push("soy-free");
 
-    // Track usage
-    usageStats.totalRequests++;
-    usageStats.lastRequestTime = new Date().toISOString();
+  const dietaryString = dietaryNotes.length > 0
+    ? `\n\nIMPORTANT: This recipe must be ${dietaryNotes.join(', ')}. Do not include any ingredients that violate these dietary restrictions.`
+    : '';
 
-    // Check cache first
-    const cacheKey = createCacheKey(ingredients, dietaryPreferences);
-    const cached = recipeCache.get(cacheKey);
-    if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
-      console.log(`Cache hit for: ${ingredients.substring(0, 50)}...`);
-      usageStats.successfulRequests++;
-      return res.json({ 
-        success: true, 
-        recipe: cached.recipe,
-        cached: true 
-      });
-    }
-
-    // Build dietary preferences string
-    const dietaryNotes = [];
-    if (dietaryPreferences.vegan) dietaryNotes.push("vegan");
-    if (dietaryPreferences.vegetarian) dietaryNotes.push("vegetarian");
-    if (dietaryPreferences.glutenFree) dietaryNotes.push("gluten-free");
-    if (dietaryPreferences.dairyFree) dietaryNotes.push("dairy-free");
-    if (dietaryPreferences.nutFree) dietaryNotes.push("nut-free");
-    if (dietaryPreferences.shellfishFree) dietaryNotes.push("shellfish-free");
-    if (dietaryPreferences.eggFree) dietaryNotes.push("egg-free");
-    if (dietaryPreferences.soyFree) dietaryNotes.push("soy-free");
-    
-    const dietaryString = dietaryNotes.length > 0 
-      ? `\n\nIMPORTANT: This recipe must be ${dietaryNotes.join(', ')}. Do not include any ingredients that violate these dietary restrictions.`
-      : '';
-
-    const prompt = `You are a creative chef. Create a delicious recipe using these ingredients: ${ingredients}${dietaryString}
+  const prompt = `You are a creative chef. Create a delicious recipe using these ingredients: ${ingredients}${dietaryString}
 
 Please provide the recipe in the following structured format:
 
@@ -242,23 +228,35 @@ Please provide the recipe in the following structured format:
 
 Make the recipe practical and delicious!`;
 
-    const recipe = await generateContentWithRetry(prompt);
-    
-    // Cache the result
-    if (recipeCache.size >= MAX_CACHE_SIZE) {
-      // Remove oldest entry
-      const firstKey = recipeCache.keys().next().value;
-      recipeCache.delete(firstKey);
+  const recipe = await generateContentWithRetry(prompt);
+
+  if (recipeCache.size >= MAX_CACHE_SIZE) {
+    const firstKey = recipeCache.keys().next().value;
+    recipeCache.delete(firstKey);
+  }
+  recipeCache.set(cacheKey, { recipe, timestamp: Date.now() });
+
+  return { recipe, cached: false };
+}
+
+app.post("/api/generate-recipe", async (req, res) => {
+  try {
+    const { ingredients, dietaryPreferences = {} } = req.body;
+
+    if (!ingredients) {
+      return res
+        .status(400)
+        .json({ success: false, error: "No ingredients provided" });
     }
-    recipeCache.set(cacheKey, {
-      recipe,
-      timestamp: Date.now()
-    });
-    
-    // Track success
+
+    // Track usage
+    usageStats.totalRequests++;
+    usageStats.lastRequestTime = new Date().toISOString();
+
+    const { recipe, cached } = await generateRecipe(ingredients, dietaryPreferences);
     usageStats.successfulRequests++;
 
-    res.json({ success: true, recipe, cached: false });
+    res.json({ success: true, recipe, cached });
   } catch (error) {
     console.error("Error:", error);
     
@@ -310,6 +308,70 @@ Make the recipe practical and delicious!`;
       error: error.message || "An error occurred while generating the recipe",
     });
   }
+});
+
+// MCP tool exposure. Separate budget from the website's own usageStats —
+// this bounds the *incremental* Gemini quota an MCP client (Claude, ChatGPT,
+// etc.) can consume, independent of real chomptron.com traffic. A fully
+// separate Gemini API key for this path would isolate quota contention
+// completely; this daily cap is the cheaper v1.
+const MCP_DAILY_LIMIT = parseInt(process.env.MCP_DAILY_RECIPE_LIMIT || "50", 10);
+let mcpCallsToday = 0;
+let mcpWindowStart = Date.now();
+
+function checkMcpBudget() {
+  if (Date.now() - mcpWindowStart > 24 * 60 * 60 * 1000) {
+    mcpCallsToday = 0;
+    mcpWindowStart = Date.now();
+  }
+  if (mcpCallsToday >= MCP_DAILY_LIMIT) {
+    throw new Error(
+      `Daily MCP recipe limit (${MCP_DAILY_LIMIT}) reached — try again tomorrow, or use chomptron.com directly.`
+    );
+  }
+  mcpCallsToday++;
+}
+
+const mcpServer = new McpServer({ name: "chomptron", version: "1.0.0" });
+
+mcpServer.registerTool(
+  "generate_recipe",
+  {
+    title: "Generate a recipe",
+    description:
+      "Given ingredients on hand (and optional dietary restrictions), generate a complete recipe: name, servings, timing, ingredient list, and steps.",
+    inputSchema: {
+      ingredients: z
+        .string()
+        .describe("Ingredients on hand, comma-separated or free text"),
+      dietaryPreferences: z
+        .object({
+          vegan: z.boolean().optional(),
+          vegetarian: z.boolean().optional(),
+          glutenFree: z.boolean().optional(),
+          dairyFree: z.boolean().optional(),
+          nutFree: z.boolean().optional(),
+          shellfishFree: z.boolean().optional(),
+          eggFree: z.boolean().optional(),
+          soyFree: z.boolean().optional(),
+        })
+        .optional(),
+    },
+    annotations: { readOnlyHint: true, openWorldHint: true },
+  },
+  async ({ ingredients, dietaryPreferences }) => {
+    checkMcpBudget();
+    const { recipe } = await generateRecipe(ingredients, dietaryPreferences);
+    return { content: [{ type: "text", text: recipe }] };
+  }
+);
+
+app.post("/mcp", async (req, res) => {
+  const transport = new NodeStreamableHTTPServerTransport({
+    sessionIdGenerator: undefined,
+  });
+  await mcpServer.connect(transport);
+  await transport.handleRequest(req, res, req.body);
 });
 
 const server = app.listen(port, () => {

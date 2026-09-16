@@ -66,6 +66,31 @@ assert(serverCode.includes("/health"), "server has health check endpoint");
 assert(serverCode.includes("/ready"), "server has readiness check endpoint");
 assert(serverCode.includes("GoogleGenerativeAI"), "server uses Gemini AI");
 
+// MCP tool exposure
+console.log("\nMCP Server Tests:");
+assert(
+  pkg.dependencies["@modelcontextprotocol/server"],
+  "MCP server dependency exists",
+);
+assert(
+  pkg.dependencies["@modelcontextprotocol/node"],
+  "MCP node transport dependency exists",
+);
+assert(serverCode.includes('app.post("/mcp"'), "server has MCP endpoint");
+assert(
+  serverCode.includes('registerTool(\n  "generate_recipe"') ||
+    serverCode.includes("generate_recipe"),
+  "MCP server registers generate_recipe tool",
+);
+assert(
+  serverCode.includes("async function generateRecipe("),
+  "recipe generation logic is a shared function, not duplicated",
+);
+assert(
+  serverCode.includes("MCP_DAILY_RECIPE_LIMIT"),
+  "MCP path has its own daily budget guard",
+);
+
 // HTML content validation
 console.log("\nFrontend Tests:");
 const html = fs.readFileSync("./index.html", "utf8");
