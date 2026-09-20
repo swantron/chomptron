@@ -13,7 +13,7 @@ Enter ingredients you have in your kitchen, and Chomptron generates creative, pr
 ```bash
 npm install
 export GEMINI_API_KEY="your-api-key-here"
-export GEMINI_MODEL="gemini-2.5-flash-lite"  # Optional, defaults to gemini-2.5-flash-lite
+export GEMINI_MODEL="gemini-3.1-flash-lite"  # Optional, defaults to gemini-3.1-flash-lite
 npm start
 ```
 
@@ -24,7 +24,7 @@ Get API key: https://makersuite.google.com/app/apikey
 ### Environment Variables
 
 - **`GEMINI_API_KEY`** (required) - Your Google Gemini API key
-- **`GEMINI_MODEL`** (optional) - Model to use, defaults to `gemini-2.5-flash-lite`
+- **`GEMINI_MODEL`** (optional) - Model to use, defaults to `gemini-3.1-flash-lite`
 - **`PORT`** (optional) - Server port, defaults to 8080
 
 ### Model Configuration
@@ -33,7 +33,7 @@ The Gemini model can be configured via the `GEMINI_MODEL` environment variable:
 
 **Recommended Models (as of December 2025):**
 
-- **`gemini-2.5-flash-lite`** (default) - **Best free tier limits**: 15 RPM, 1,000 RPD
+- **`gemini-3.1-flash-lite`** (default) - **Best free tier limits**: 15 RPM, 1,000 RPD
 - **`gemini-2.5-flash`** - 10 RPM, 250 RPD
 - **`gemini-2.0-flash`** - 10 RPM, 200 RPD (⚠️ unstable quota, often shows `limit: 0`)
 - **`gemini-1.5-flash`** - Legacy model, may have better limits than 2.0
@@ -41,6 +41,7 @@ The Gemini model can be configured via the `GEMINI_MODEL` environment variable:
 **December 2025 Quota Shift:**
 
 Google overhauled free tier quotas in December 2025:
+
 - `gemini-2.0-flash` was removed from fully unauthenticated free tier
 - Many accounts see `limit: 0` errors for newer models without billing enabled
 - Free tier quotas don't automatically reset monthly
@@ -48,6 +49,7 @@ Google overhauled free tier quotas in December 2025:
 **Fixing "Limit: 0" Errors:**
 
 If you're seeing quota errors with `limit: 0`:
+
 1. **Switch to `gemini-2.5-flash-lite`** - Best free tier model currently available
 2. **Enable billing (Pay-As-You-Go)** - Linking a credit card (even if you don't spend) moves you from "Limited Free" to "Tier 1" and unlocks promised free quotas
 3. **Check your region** - EEA, UK, and Switzerland have restricted free tier access
@@ -55,12 +57,12 @@ If you're seeing quota errors with `limit: 0`:
 
 **Free Tier Limits (as of Dec 2025):**
 
-| Model | Requests/Minute | Requests/Day | Best For |
-|------|----------------|--------------|----------|
-| **gemini-2.5-flash-lite** | **15** | **1,000** | **High-volume apps** |
-| gemini-2.5-flash | 10 | 250 | General use |
-| gemini-2.0-flash | 10 | 200 | Legacy (unstable) |
-| gemini-2.5-pro | 2 | 50 | Complex reasoning |
+| Model                     | Requests/Minute | Requests/Day | Best For             |
+| ------------------------- | --------------- | ------------ | -------------------- |
+| **gemini-2.5-flash-lite** | **15**          | **1,000**    | **High-volume apps** |
+| gemini-2.5-flash          | 10              | 250          | General use          |
+| gemini-2.0-flash          | 10              | 200          | Legacy (unstable)    |
+| gemini-2.5-pro            | 2               | 50           | Complex reasoning    |
 
 ## Testing
 
@@ -73,25 +75,7 @@ Tests validate:
 - **Modular File Structure**: Verification of external `styles.css` and `app.js` linking
 - **CI/CD & DevOps**: Docker and Cloud Build configurations
 - **API Integrity**: Health check endpoints (`/health`, `/ready`) and recipe generation
-- **Feature Robustness**: Recipe history, scaling logic, and favorites (70+ comprehensive tests)
-
-### Browser-Based History Tests
-
-For interactive testing of the Recipe History & Favorites feature:
-
-```bash
-npm start
-# Visit http://localhost:8080/test-history.html
-```
-
-The browser test suite includes:
-- localStorage persistence testing
-- Recipe save/load operations
-- Favorite toggle functionality
-- Recipe name extraction
-- 100-recipe limit validation
-- Data structure validation
-- Automatic backup/restore of existing data
+- **Feature Robustness**: Recipe history, scaling logic, and favorites
 
 ## API Endpoints
 
@@ -124,6 +108,8 @@ The browser test suite includes:
     }
     ```
 
+- **`POST /mcp`** — MCP Streamable HTTP. Tool `generate_recipe` (ingredients + optional dietary flags). Unauthenticated. Daily cap `MCP_DAILY_RECIPE_LIMIT` (default 20), persisted to `MCP_BUDGET_FILE` so a process restart on the same instance does not reset it.
+
 ## Architecture
 
 Chomptron is built as a **serverless application** on Google Cloud Run for cost efficiency and automatic scaling.
@@ -131,7 +117,7 @@ Chomptron is built as a **serverless application** on Google Cloud Run for cost 
 **Tech Stack:**
 
 - **Backend:** Node.js 24 + Express
-- **AI:** Google Gemini (configurable model, defaults to gemini-2.5-flash-lite)
+- **AI:** Google Gemini (configurable model, defaults to gemini-3.1-flash-lite)
 - **Frontend:** Modular Vanilla HTML/CSS/JavaScript (Clean separation of concerns)
 - **Storage:** Browser localStorage for recipe history
 - **Platform:** Google Cloud Run (serverless)
@@ -216,6 +202,7 @@ gcloud run logs tail chomptron --region us-central1
 ## Features
 
 ### Core Functionality
+
 - ✨ AI-powered recipe generation using Google Gemini
 - 🍳 Creative recipe names and instructions
 - 📏 Precise measurements and serving sizes
@@ -225,6 +212,7 @@ gcloud run logs tail chomptron --region us-central1
 - ⚡ Serverless, auto-scaling infrastructure on Google Cloud Run
 
 ### Recipe Management
+
 - 📚 Recipe history with localStorage persistence (up to 100 recipes)
 - ⭐ Favorites system to mark and filter beloved recipes
 - 🔍 Search and filter through saved recipes
@@ -234,12 +222,14 @@ gcloud run logs tail chomptron --region us-central1
 - ⭐ Rate recipes with 5-star rating system
 
 ### Recipe Customization
+
 - 🥗 **Dietary Preferences & Allergies**: Vegan, Vegetarian, Gluten-Free, Dairy-Free, Nut-Free, Shellfish-Free, Egg-Free, Soy-Free
 - 📊 **Recipe Scaling**: Adjust serving sizes from 0.25x to 4x with automatic ingredient scaling
 - 🖨️ **Print-Friendly View**: Clean print layout optimized for printing recipes
 - 🔗 **Shareable URLs**: Generate shareable links for recipes (Web Share API support)
 
 ### Recipe Display
+
 - 📋 **Structured Recipe Format**: Parsed display with organized sections:
   - Recipe name
   - Serving size and timing information
@@ -249,11 +239,13 @@ gcloud run logs tail chomptron --region us-central1
 - 🎨 **Dark/Light Mode**: Toggle between themes with persistent preference
 
 ### Performance & Optimization
+
 - 💾 **Recipe Caching**: In-memory cache reduces API calls for similar ingredient combinations
 - 🔄 **Smart Retry Logic**: Automatic retry with exponential backoff for quota errors
 - ⚡ **Rate Limiting**: Client-side rate limiting prevents excessive API calls
 
 ### Technical Features
+
 - 🔍 Health monitoring and readiness checks
 - 🔎 SEO optimized with meta tags, Open Graph, Twitter Cards, and structured data
 - 📱 PWA support with manifest.json
@@ -340,4 +332,3 @@ This is a personal project, but suggestions and improvements are welcome!
 ## License
 
 MIT
-

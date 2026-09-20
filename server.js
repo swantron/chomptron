@@ -5,8 +5,11 @@ const express = require("express");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { syntheticMarkerMiddleware } = require("@swantron/otel-bootstrap");
 const { McpServer } = require("@modelcontextprotocol/server");
-const { NodeStreamableHTTPServerTransport } = require("@modelcontextprotocol/node");
+const {
+  NodeStreamableHTTPServerTransport,
+} = require("@modelcontextprotocol/node");
 const { z } = require("zod");
+const fs = require("fs");
 
 const app = express();
 // Stamp synthetic run ids from watchtron probes onto the server span.
@@ -44,11 +47,11 @@ const MAX_CACHE_SIZE = 100; // Limit cache size
 
 // Helper to create cache key from ingredients
 const createCacheKey = (ingredients, dietaryPrefs = {}) => {
-  const normalized = ingredients.toLowerCase().trim().replace(/\s+/g, ' ');
+  const normalized = ingredients.toLowerCase().trim().replace(/\s+/g, " ");
   const prefs = Object.keys(dietaryPrefs)
-    .filter(k => dietaryPrefs[k])
+    .filter((k) => dietaryPrefs[k])
     .sort()
-    .join(',');
+    .join(",");
   return `${normalized}|${prefs}`;
 };
 
@@ -82,8 +85,8 @@ app.get("/ready", (req, res) => {
       error: "GEMINI_API_KEY not configured",
     });
   }
-  res.status(200).json({ 
-    status: "ready", 
+  res.status(200).json({
+    status: "ready",
     service: "chomptron",
     model: GEMINI_MODEL,
   });
@@ -106,7 +109,9 @@ const extractRetryDelay = (error) => {
   try {
     // Check if error has retry info in the message or details
     const errorString = JSON.stringify(error);
-    const retryMatch = errorString.match(/retryDelay["\s:]+"?(\d+(?:\.\d+)?)s/i);
+    const retryMatch = errorString.match(
+      /retryDelay["\s:]+"?(\d+(?:\.\d+)?)s/i,
+    );
     if (retryMatch) {
       return Math.ceil(parseFloat(retryMatch[1]) * 1000); // Convert to milliseconds
     }
@@ -148,7 +153,7 @@ const isQuotaError = (error) => {
 // Helper function to generate content with retry logic
 const generateContentWithRetry = async (prompt, maxRetries = 3) => {
   let lastError;
-  
+
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const result = await model.generateContent(prompt);
@@ -156,24 +161,25 @@ const generateContentWithRetry = async (prompt, maxRetries = 3) => {
       return response.text();
     } catch (error) {
       lastError = error;
-      
+
       // If it's a quota error, extract retry delay and wait
       if (isQuotaError(error) && attempt < maxRetries) {
-        const retryDelay = extractRetryDelay(error) || Math.pow(2, attempt) * 1000; // Exponential backoff fallback
-        
+        const retryDelay =
+          extractRetryDelay(error) || Math.pow(2, attempt) * 1000; // Exponential backoff fallback
+
         console.warn(
-          `Quota exceeded (attempt ${attempt + 1}/${maxRetries + 1}). Retrying in ${retryDelay}ms...`
+          `Quota exceeded (attempt ${attempt + 1}/${maxRetries + 1}). Retrying in ${retryDelay}ms...`,
         );
-        
+
         await sleep(retryDelay);
         continue;
       }
-      
+
       // If not a quota error or max retries reached, throw
       throw error;
     }
   }
-  
+
   throw lastError;
 };
 
@@ -183,7 +189,7 @@ const generateContentWithRetry = async (prompt, maxRetries = 3) => {
 async function generateRecipe(ingredients, dietaryPreferences = {}) {
   const cacheKey = createCacheKey(ingredients, dietaryPreferences);
   const cached = recipeCache.get(cacheKey);
-  if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
     console.log(`Cache hit for: ${ingredients.substring(0, 50)}...`);
     return { recipe: cached.recipe, cached: true };
   }
@@ -198,9 +204,10 @@ async function generateRecipe(ingredients, dietaryPreferences = {}) {
   if (dietaryPreferences.eggFree) dietaryNotes.push("egg-free");
   if (dietaryPreferences.soyFree) dietaryNotes.push("soy-free");
 
-  const dietaryString = dietaryNotes.length > 0
-    ? `\n\nIMPORTANT: This recipe must be ${dietaryNotes.join(', ')}. Do not include any ingredients that violate these dietary restrictions.`
-    : '';
+  const dietaryString =
+    dietaryNotes.length > 0
+      ? `\n\nIMPORTANT: This recipe must be ${dietaryNotes.join(", ")}. Do not include any ingredients that violate these dietary restrictions.`
+      : "";
 
   const prompt = `You are a creative chef. Create a delicious recipe using these ingredients: ${ingredients}${dietaryString}
 
@@ -249,43 +256,51 @@ app.post("/api/generate-recipe", async (req, res) => {
         .json({ success: false, error: "No ingredients provided" });
     }
 
+    checkRestBudget(req);
+
     // Track usage
     usageStats.totalRequests++;
     usageStats.lastRequestTime = new Date().toISOString();
 
-    const { recipe, cached } = await generateRecipe(ingredients, dietaryPreferences);
+    const { recipe, cached } = await generateRecipe(
+      ingredients,
+      dietaryPreferences,
+    );
     usageStats.successfulRequests++;
 
     res.json({ success: true, recipe, cached });
   } catch (error) {
     console.error("Error:", error);
-    
+
     // Handle quota/rate limit errors with user-friendly messages
     if (isQuotaError(error)) {
       usageStats.quotaErrors++;
-      
+
       const retryDelay = extractRetryDelay(error);
       const retrySeconds = retryDelay ? Math.ceil(retryDelay / 1000) : null;
-      
+
       let errorMessage = "API quota exceeded. ";
       if (retrySeconds) {
         errorMessage += `Please try again in ${retrySeconds} seconds. `;
       }
       errorMessage += `Current model: ${GEMINI_MODEL}. `;
-      
+
       // Provide helpful guidance based on the error
       if (error.message && error.message.includes("limit: 0")) {
-        errorMessage += "⚠️ Seeing 'limit: 0'? This often means the model was removed from fully free tier. ";
-        errorMessage += "Try switching to gemini-3.1-flash-lite or enable billing (pay-as-you-go) to unlock Tier 1 quotas. ";
+        errorMessage +=
+          "⚠️ Seeing 'limit: 0'? This often means the model was removed from fully free tier. ";
+        errorMessage +=
+          "Try switching to gemini-3.1-flash-lite or enable billing (pay-as-you-go) to unlock Tier 1 quotas. ";
       } else {
         errorMessage += "The free tier has daily and per-minute limits. ";
         if (GEMINI_MODEL !== "gemini-3.1-flash-lite") {
-          errorMessage += "Consider switching to gemini-3.1-flash-lite for better free tier limits. ";
+          errorMessage +=
+            "Consider switching to gemini-3.1-flash-lite for better free tier limits. ";
         }
         errorMessage += "You can also enable billing to access higher limits. ";
       }
       errorMessage += "Check your quota at https://ai.dev/usage";
-      
+
       return res.status(429).json({
         success: false,
         error: errorMessage,
@@ -298,12 +313,13 @@ app.post("/api/generate-recipe", async (req, res) => {
         },
       });
     }
-    
+
     // Track other errors
     usageStats.otherErrors++;
-    
+
     // Generic error handling
-    res.status(500).json({
+    const status = error.status === 429 ? 429 : 500;
+    res.status(status).json({
       success: false,
       error: error.message || "An error occurred while generating the recipe",
     });
@@ -312,12 +328,49 @@ app.post("/api/generate-recipe", async (req, res) => {
 
 // MCP tool exposure. Separate budget from the website's own usageStats —
 // this bounds the *incremental* Gemini quota an MCP client (Claude, ChatGPT,
-// etc.) can consume, independent of real chomptron.com traffic. A fully
-// separate Gemini API key for this path would isolate quota contention
-// completely; this daily cap is the cheaper v1.
-const MCP_DAILY_LIMIT = parseInt(process.env.MCP_DAILY_RECIPE_LIMIT || "50", 10);
+// etc.) can consume, independent of real chomptron.com traffic. Persisted to
+// a file so a process restart on the same Cloud Run instance does not reset
+// the counter; a brand-new instance still starts at zero (no shared DB).
+const MCP_DAILY_LIMIT = parseInt(
+  process.env.MCP_DAILY_RECIPE_LIMIT || "20",
+  10,
+);
+const MCP_BUDGET_FILE =
+  process.env.MCP_BUDGET_FILE || "/tmp/chomptron-mcp-budget.json";
+const REST_HOURLY_LIMIT = parseInt(
+  process.env.REST_HOURLY_RECIPE_LIMIT || "30",
+  10,
+);
 let mcpCallsToday = 0;
 let mcpWindowStart = Date.now();
+const restHits = new Map();
+
+function loadMcpBudget() {
+  try {
+    const raw = JSON.parse(fs.readFileSync(MCP_BUDGET_FILE, "utf8"));
+    if (typeof raw.count === "number" && typeof raw.windowStart === "number") {
+      if (Date.now() - raw.windowStart < 24 * 60 * 60 * 1000) {
+        mcpCallsToday = raw.count;
+        mcpWindowStart = raw.windowStart;
+      }
+    }
+  } catch {
+    // First boot, or tmp wiped — start a fresh window.
+  }
+}
+
+function saveMcpBudget() {
+  try {
+    fs.writeFileSync(
+      MCP_BUDGET_FILE,
+      JSON.stringify({ count: mcpCallsToday, windowStart: mcpWindowStart }),
+    );
+  } catch (err) {
+    console.warn("Could not persist MCP budget:", err.message);
+  }
+}
+
+loadMcpBudget();
 
 function checkMcpBudget() {
   if (Date.now() - mcpWindowStart > 24 * 60 * 60 * 1000) {
@@ -326,10 +379,37 @@ function checkMcpBudget() {
   }
   if (mcpCallsToday >= MCP_DAILY_LIMIT) {
     throw new Error(
-      `Daily MCP recipe limit (${MCP_DAILY_LIMIT}) reached — try again tomorrow, or use chomptron.com directly.`
+      `Daily MCP recipe limit (${MCP_DAILY_LIMIT}) reached — try again tomorrow, or use chomptron.com directly.`,
     );
   }
   mcpCallsToday++;
+  saveMcpBudget();
+}
+
+function clientIp(req) {
+  const forwarded = req.headers["x-forwarded-for"];
+  if (typeof forwarded === "string" && forwarded.length > 0) {
+    return forwarded.split(",")[0].trim();
+  }
+  return req.ip || req.socket?.remoteAddress || "unknown";
+}
+
+function checkRestBudget(req) {
+  const ip = clientIp(req);
+  const now = Date.now();
+  const rec = restHits.get(ip);
+  if (!rec || now - rec.start > 60 * 60 * 1000) {
+    restHits.set(ip, { count: 1, start: now });
+    return;
+  }
+  if (rec.count >= REST_HOURLY_LIMIT) {
+    const err = new Error(
+      `Hourly recipe limit (${REST_HOURLY_LIMIT}) reached for this address — try again later.`,
+    );
+    err.status = 429;
+    throw err;
+  }
+  rec.count++;
 }
 
 const mcpServer = new McpServer({ name: "chomptron", version: "1.0.0" });
@@ -363,7 +443,7 @@ mcpServer.registerTool(
     checkMcpBudget();
     const { recipe } = await generateRecipe(ingredients, dietaryPreferences);
     return { content: [{ type: "text", text: recipe }] };
-  }
+  },
 );
 
 app.post("/mcp", async (req, res) => {

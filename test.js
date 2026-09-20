@@ -90,11 +90,19 @@ assert(
   serverCode.includes("MCP_DAILY_RECIPE_LIMIT"),
   "MCP path has its own daily budget guard",
 );
+assert(
+  serverCode.includes("MCP_BUDGET_FILE") &&
+    serverCode.includes("REST_HOURLY_RECIPE_LIMIT"),
+  "MCP budget is file-persisted and the website has a server-side hourly cap",
+);
+assert(fs.existsSync("./server.json"), "MCP registry manifest exists");
 
 // HTML content validation
 console.log("\nFrontend Tests:");
 const html = fs.readFileSync("./index.html", "utf8");
-const css = fs.existsSync("./styles.css") ? fs.readFileSync("./styles.css", "utf8") : "";
+const css = fs.existsSync("./styles.css")
+  ? fs.readFileSync("./styles.css", "utf8")
+  : "";
 const js = fs.existsSync("./app.js") ? fs.readFileSync("./app.js", "utf8") : "";
 
 assert(html.includes("Chomptron"), "HTML includes Chomptron branding");
@@ -182,19 +190,10 @@ assert(
   html.includes('class="history-toggle"'),
   "HTML has history toggle button",
 );
-assert(
-  html.includes('id="historyPanel"'),
-  "HTML has history panel element",
-);
-assert(
-  html.includes('id="historySearch"'),
-  "HTML has history search input",
-);
+assert(html.includes('id="historyPanel"'), "HTML has history panel element");
+assert(html.includes('id="historySearch"'), "HTML has history search input");
 assert(html.includes('id="historyList"'), "HTML has history list container");
-assert(
-  html.includes('id="favoriteBtn"'),
-  "HTML has favorite toggle button",
-);
+assert(html.includes('id="favoriteBtn"'), "HTML has favorite toggle button");
 assert(
   html.includes("toggleHistory") || js.includes("toggleHistory"),
   "App has toggleHistory function",
@@ -243,12 +242,12 @@ assert(
 console.log("\nMobile Responsive Tests:");
 assert(
   html.includes("@media (max-width: 768px)") ||
-  css.includes("@media (max-width: 768px)"),
+    css.includes("@media (max-width: 768px)"),
   "App has tablet breakpoint",
 );
 assert(
   html.includes("@media (max-width: 600px)") ||
-  css.includes("@media (max-width: 600px)"),
+    css.includes("@media (max-width: 600px)"),
   "App has mobile breakpoint",
 );
 
@@ -264,7 +263,7 @@ assert(
 );
 assert(
   html.includes("localStorage.removeItem") ||
-  js.includes("localStorage.removeItem"),
+    js.includes("localStorage.removeItem"),
   "App uses localStorage.removeItem",
 );
 assert(
@@ -281,18 +280,18 @@ console.log("\nRecipe Save Integration Tests:");
 assert(
   (html.includes("RecipeManager.saveRecipe") ||
     js.includes("RecipeManager.saveRecipe")) &&
-  (html.includes("ingredients") || js.includes("ingredients")) &&
-  (html.includes("data.recipe") || js.includes("data.recipe")),
+    (html.includes("ingredients") || js.includes("ingredients")) &&
+    (html.includes("data.recipe") || js.includes("data.recipe")),
   "App auto-saves recipes on generation",
 );
 assert(
   html.includes("RecipeManager.currentRecipeId") ||
-  js.includes("RecipeManager.currentRecipeId"),
+    js.includes("RecipeManager.currentRecipeId"),
   "App tracks current recipe ID",
 );
 assert(
   html.match(/if\s*\(\s*recipes\.length\s*>\s*100\s*\)/) ||
-  js.match(/if\s*\(\s*recipes\.length\s*>\s*100\s*\)/),
+    js.match(/if\s*\(\s*recipes\.length\s*>\s*100\s*\)/),
   "App limits history to 100 recipes",
 );
 
