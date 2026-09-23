@@ -1,0 +1,21 @@
+# chomptron
+
+> chomptron turns ingredients you have on hand into a complete recipe (name, servings, timing, ingredient list, steps), with optional dietary restrictions. Free. Uses Google Gemini.
+
+## Connect
+
+- MCP endpoint (streamable HTTP): https://chomptron.com/mcp
+- No authentication required
+- Claude Code: `claude mcp add --transport http chomptron https://chomptron.com/mcp`
+
+## Tool
+
+- `generate_recipe`: given `ingredients` (comma-separated or free text) and optional `dietaryPreferences`, returns a complete recipe.
+
+## Limits
+
+- Rate-limited to keep the service free for everyone; if you hit the daily limit, try again the next day or use chomptron.com directly.
+
+## Links
+
+- Home: https://chomptron.com/
